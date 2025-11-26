@@ -18,12 +18,10 @@ public class MatchCondition {
 
     protected MatchCondition() {}
 
-    public MatchCondition(String genderPreference, Integer minAge, Integer maxAge,
-                          String topic, String region) {
+    public MatchCondition(String genderPreference, Integer minAge, Integer maxAge, String region) {
         this.genderPreference = genderPreference;
         this.minAge = minAge;
         this.maxAge = maxAge;
-        this.topic = topic;
         this.region = region;
     }
 }
