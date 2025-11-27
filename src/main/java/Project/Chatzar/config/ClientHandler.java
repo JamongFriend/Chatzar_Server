@@ -1,5 +1,7 @@
 package Project.Chatzar.config;
 
+import Project.Chatzar.Service.MessageService;
+
 import java.io.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,12 +11,17 @@ public class ClientHandler implements Runnable  {
     private final Socket socket;
     private final Server server;
 
+    private final MessageService messageService;
+    private final ChatRoomSessionManager chatRoomSessionManager;
+
     private BufferedReader in;
     private BufferedWriter out;
 
-    public ClientHandler(Socket socket, Server server) {
+    public ClientHandler(Socket socket, Server server, MessageService messageService, ChatRoomSessionManager chatRoomSessionManager) {
         this.socket = socket;
         this.server = server;
+        this.messageService = messageService;
+        this.chatRoomSessionManager = chatRoomSessionManager;
 
         try {
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -32,9 +39,27 @@ public class ClientHandler implements Runnable  {
 
             String line;
             while((line = in.readLine()) != null){
-                System.out.println("수신 [" + socket.getRemoteSocketAddress() + "]: " + line);
+                String[] tokens = line.split(":");
+                String code = tokens[0];
+                switch (code) {
+                    case "SEND" -> {
+                        Long roomId = Long.parseLong(tokens[1]);
+                        Long senderId = Long.parseLong(tokens[2]);
+                        String content = tokens[3];
 
-                server.broadcast(line, this);
+                        messageService.sendMessage(roomId, senderId, content);
+                    }
+                    case "JOIN" -> {
+                        Long roomId = Long.parseLong(tokens[1]);
+                        Long memberId = Long.parseLong(tokens[2]);
+                        chatRoomSessionManager.join(roomId, memberId, this);
+                    }
+                    case "QUIT" -> {
+                        Long memberId = Long.parseLong(tokens[1]);
+                        chatRoomSessionManager.leaveRooms(memberId, this);
+                        return;
+                    }
+                }
             }
         } catch (IOException e){
             System.out.println("클라이언트 연결 오류: " + e.getMessage());
