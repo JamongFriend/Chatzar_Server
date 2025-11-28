@@ -1,5 +1,5 @@
 package Project.Chatzar.Domain;
 
 public enum MemberStatus {
-    ONLINE, OFFLINE, BLOCKED, BANNED
+    ACTIVE, BLOCKED, BANNED
 }
