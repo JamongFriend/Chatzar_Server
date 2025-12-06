@@ -69,21 +69,21 @@ public class MatchService {
 
         MatchRequest partnerRequest = optionalPartner.get();
 
-        Member me = myRequest.getRequester();
-        Member partner = partnerRequest.getRequester();
+        Member memberA = myRequest.getRequester();
+        Member memberB = partnerRequest.getRequester();
         // Match 엔티티 생성 & 저장
-        Match match = new Match(null, me, partner);
+        Match match = new Match(null, memberA, memberB);
         matchRepository.save(match);
 
         // ChatRoom 엔티티 생성 & 저장
-        ChatRoom chatRoom = new ChatRoom(me, partner); // 아래 ChatRoom 코드에 생성자 추가해줄 거야
+        ChatRoom chatRoom = new ChatRoom(memberA, memberB);
         chatRoomRepository.save(chatRoom);
 
         // 두 요청 상태 MATCHED로 변경
         myRequest.markMatched();
         partnerRequest.markMatched();
 
-        return MatchResult.matched(match.getId(), chatRoom.getId(), partner);
+        return MatchResult.matched(match.getId(), chatRoom.getId(), memberB);
     }
 
 }

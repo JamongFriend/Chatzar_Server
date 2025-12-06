@@ -27,7 +27,25 @@ public class ChatRoom {
     @Enumerated(EnumType.STRING)
     private ChatRoomStatus status = ChatRoomStatus.ACTIVE;
 
+    protected ChatRoom() {}
+
+    // 방 생성용 팩토리 메서드
+    public static ChatRoom create(Member memberA, Member memberB) {
+        ChatRoom room = new ChatRoom();
+        room.memberA = memberA;
+        room.memberB = memberB;
+        room.status = ChatRoomStatus.ACTIVE;
+        room.createdAt = LocalDateTime.now();
+        return room;
+    }
+
     public void close() {
         this.status = ChatRoomStatus.CLOSED;
+    }
+
+    public boolean isParticipant(Member member) {
+        Long id = member.getId();
+        return (memberA != null && memberA.getId().equals(id))
+                || (memberB != null && memberB.getId().equals(id));
     }
 }
