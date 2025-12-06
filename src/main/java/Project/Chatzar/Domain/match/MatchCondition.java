@@ -1,4 +1,4 @@
-package Project.Chatzar.Domain;
+package Project.Chatzar.Domain.match;
 
 import jakarta.persistence.Embeddable;
 import lombok.Getter;

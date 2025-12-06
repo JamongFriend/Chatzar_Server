@@ -1,6 +1,6 @@
 package Project.Chatzar.repository;
 
-import Project.Chatzar.Domain.MatchPreference;
+import Project.Chatzar.Domain.match.MatchPreference;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

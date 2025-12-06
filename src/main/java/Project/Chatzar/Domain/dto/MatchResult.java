@@ -1,6 +1,6 @@
 package Project.Chatzar.Domain.dto;
 
-import Project.Chatzar.Domain.Member;
+import Project.Chatzar.Domain.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package Project.Chatzar.Domain;
+package Project.Chatzar.Domain.member;
 
 import jakarta.persistence.*;
 import lombok.Getter;

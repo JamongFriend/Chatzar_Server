@@ -1,7 +1,7 @@
 package Project.Chatzar.repository;
 
-import Project.Chatzar.Domain.MatchRequest;
-import Project.Chatzar.Domain.MatchRequestStatus;
+import Project.Chatzar.Domain.match.MatchRequest;
+import Project.Chatzar.Domain.match.MatchRequestStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

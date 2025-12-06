@@ -1,7 +1,8 @@
 package Project.Chatzar.Domain.dto;
 
 
-import Project.Chatzar.Domain.MemberStatus;
+import Project.Chatzar.Domain.member.MemberStatus;
+import Project.Chatzar.Domain.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,7 +17,7 @@ public class MemberResponse {
     private String age;
     private MemberStatus status;
 
-    public static MemberResponse fromEntity(Project.Chatzar.Domain.Member member) {
+    public static MemberResponse fromEntity(Member member) {
         return new MemberResponse(
                 member.getId(),
                 member.getName(),

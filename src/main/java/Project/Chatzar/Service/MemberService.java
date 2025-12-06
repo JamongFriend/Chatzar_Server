@@ -1,7 +1,7 @@
 package Project.Chatzar.Service;
 
-import Project.Chatzar.Domain.Member;
-import Project.Chatzar.Domain.MemberStatus;
+import Project.Chatzar.Domain.member.Member;
+import Project.Chatzar.Domain.member.MemberStatus;
 import Project.Chatzar.Domain.dto.LoginRequest;
 import Project.Chatzar.Domain.dto.MemberResponse;
 import Project.Chatzar.Domain.dto.RegisterRequest;

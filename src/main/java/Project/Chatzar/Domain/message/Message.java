@@ -1,5 +1,7 @@
-package Project.Chatzar.Domain;
+package Project.Chatzar.Domain.message;
 
+import Project.Chatzar.Domain.chatRoom.ChatRoom;
+import Project.Chatzar.Domain.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 
