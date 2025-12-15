@@ -1,6 +1,6 @@
 package Project.Chatzar.config;
 
-import Project.Chatzar.Service.MessageService;
+import Project.Chatzar.application.MessageService;
 
 import java.io.*;
 import java.io.BufferedReader;

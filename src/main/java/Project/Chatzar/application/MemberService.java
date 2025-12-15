@@ -1,4 +1,4 @@
-package Project.Chatzar.Service;
+package Project.Chatzar.application;
 
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.member.MemberStatus;

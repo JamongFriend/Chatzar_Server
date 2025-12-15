@@ -1,4 +1,4 @@
-package Project.Chatzar.Service;
+package Project.Chatzar.application;
 
 import Project.Chatzar.Domain.chatRoom.ChatRoom;
 import Project.Chatzar.Domain.match.matchPreference.MatchPreference;
