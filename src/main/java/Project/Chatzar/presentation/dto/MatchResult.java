@@ -1,4 +1,4 @@
-package Project.Chatzar.Domain.dto;
+package Project.Chatzar.presentation.dto;
 
 import Project.Chatzar.Domain.member.Member;
 import lombok.AllArgsConstructor;
