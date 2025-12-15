@@ -1,5 +1,6 @@
-package Project.Chatzar.Domain.match;
+package Project.Chatzar.Domain.match.matchPreference;
 
+import Project.Chatzar.Domain.match.MatchCondition;
 import Project.Chatzar.Domain.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;

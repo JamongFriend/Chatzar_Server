@@ -1,6 +1,5 @@
-package Project.Chatzar.repository;
+package Project.Chatzar.Domain.match.matchPreference;
 
-import Project.Chatzar.Domain.match.MatchPreference;
 import Project.Chatzar.Domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -8,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface MatchPreferenceRepository extends JpaRepository<MatchPreference, Long> {
+public interface MatchPreferenceRepository {
 
     Optional<MatchPreference> findByMember(Member member);
 
