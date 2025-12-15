@@ -77,7 +77,7 @@ public class MatchService {
         matchRepository.save(match);
 
         // ChatRoom 엔티티 생성 & 저장
-        ChatRoom chatRoom = new ChatRoom(memberA, memberB);
+        ChatRoom chatRoom = ChatRoom.create(memberA, memberB);
         chatRoomRepository.save(chatRoom);
 
         // 두 요청 상태 MATCHED로 변경

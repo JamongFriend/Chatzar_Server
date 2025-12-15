@@ -3,6 +3,7 @@ package Project.Chatzar.Domain.member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.net.ssl.SSLSession;
 import java.util.Optional;
 
 @Repository
@@ -15,4 +16,8 @@ public interface MemberRepository {
     Optional<Member> findByNickname(String nickname);
 
     boolean existsByNickname(String nickname);
+
+    Member save(Member member);
+
+    Optional<Member> findById(Long memberId);
 }

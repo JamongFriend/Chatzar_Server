@@ -24,4 +24,9 @@ public class MatchRequestRepositoryImpl implements MatchRequestRepository {
     public Optional<MatchRequest> findFirstByStatusAndRequesterNotOrderByCreatedAtAsc(MatchRequestStatus status, Member requester) {
         return matchRequestJpaRepository.findFirstByStatusAndRequesterNotOrderByCreatedAtAsc(status, requester);
     }
+
+    @Override
+    public void save(MatchRequest myRequest) {
+
+    }
 }

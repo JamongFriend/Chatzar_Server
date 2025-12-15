@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -22,5 +23,15 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository {
     @Override
     public ChatRoom findByMatchId(Long matchId) {
         return chatRoomJpaRepository.findByMatchId(matchId);
+    }
+
+    @Override
+    public ChatRoom save(ChatRoom room) {
+        return chatRoomJpaRepository.save(room);
+    }
+
+    @Override
+    public Optional<ChatRoom> findById(Long roomId) {
+        return chatRoomJpaRepository.findById(roomId);
     }
 }

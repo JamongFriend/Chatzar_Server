@@ -27,8 +27,6 @@ public class ChatRoom {
     @Enumerated(EnumType.STRING)
     private ChatRoomStatus status = ChatRoomStatus.ACTIVE;
 
-    protected ChatRoom() {}
-
     // 방 생성용 팩토리 메서드
     public static ChatRoom create(Member memberA, Member memberB) {
         ChatRoom room = new ChatRoom();

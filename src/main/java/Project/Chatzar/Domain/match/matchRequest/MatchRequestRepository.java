@@ -17,4 +17,6 @@ public interface MatchRequestRepository {
             MatchRequestStatus status,
             Member requester
     );
+
+    void save(MatchRequest myRequest);
 }

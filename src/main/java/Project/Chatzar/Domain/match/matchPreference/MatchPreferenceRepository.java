@@ -12,4 +12,6 @@ public interface MatchPreferenceRepository {
     Optional<MatchPreference> findByMember(Member member);
 
     boolean existsByMemberId(Long memberId);
+
+    void save(MatchPreference newPref);
 }

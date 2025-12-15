@@ -17,4 +17,9 @@ public class MatchRepositoryImpl implements MatchRepository {
     public List<Match> findByMemberAIdOrMemberBId(Long memberAId, Long memberBId) {
         return matchJpaRepository.findByMemberAIdOrMemberBId(memberAId, memberBId);
     }
+
+    @Override
+    public void save(Match match) {
+
+    }
 }

@@ -1,10 +1,10 @@
 package Project.Chatzar.Domain.chatRoom;
 
 import Project.Chatzar.Domain.member.Member;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ChatRoomRepository {
@@ -12,4 +12,8 @@ public interface ChatRoomRepository {
 
     // 특정 매칭과 연결된 방 찾기
     ChatRoom findByMatchId(Long matchId);
+
+    ChatRoom save(ChatRoom room);
+
+    Optional<ChatRoom> findById(Long roomId);
 }

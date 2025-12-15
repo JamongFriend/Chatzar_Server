@@ -22,4 +22,9 @@ public class MatchPreferenceRepositoryImpl implements MatchPreferenceRepository 
     public boolean existsByMemberId(Long memberId) {
         return matchPreferenceJpaRepository.existsByMemberId(memberId);
     }
+
+    @Override
+    public void save(MatchPreference newPref) {
+
+    }
 }

@@ -31,4 +31,14 @@ public class MemberRepositoryImpl implements MemberRepository {
     public boolean existsByNickname(String nickname) {
         return memberJpaRepository.existsByNickname(nickname);
     }
+
+    @Override
+    public Member save(Member member) {
+        return memberJpaRepository.save(member);
+    }
+
+    @Override
+    public Optional<Member> findById(Long memberId) {
+        return memberJpaRepository.findById(memberId);
+    }
 }
