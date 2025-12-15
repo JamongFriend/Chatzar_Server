@@ -1,18 +1,19 @@
 package Project.Chatzar.Service;
 
 import Project.Chatzar.Domain.chatRoom.ChatRoom;
-import Project.Chatzar.Domain.dto.MatchResult;
+import Project.Chatzar.Domain.match.matchPreference.MatchPreference;
+import Project.Chatzar.Domain.match.matchRequest.MatchRequest;
+import Project.Chatzar.Domain.match.matchRequest.MatchRequestStatus;
+import Project.Chatzar.presentation.dto.MatchResult;
 import Project.Chatzar.Domain.match.*;
 import Project.Chatzar.Domain.member.Member;
-import Project.Chatzar.repository.ChatRoomRepository;
-import Project.Chatzar.repository.MatchPreferenceRepository;
-import Project.Chatzar.repository.MatchRepository;
-import Project.Chatzar.repository.MatchRequestRepository;
+import Project.Chatzar.Domain.chatRoom.ChatRoomRepository;
+import Project.Chatzar.Domain.match.matchPreference.MatchPreferenceRepository;
+import Project.Chatzar.Domain.match.MatchRepository;
+import Project.Chatzar.Domain.match.matchRequest.MatchRequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

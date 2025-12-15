@@ -2,7 +2,7 @@ package Project.Chatzar.Service;
 
 import Project.Chatzar.Domain.chatRoom.ChatRoom;
 import Project.Chatzar.Domain.member.Member;
-import Project.Chatzar.repository.ChatRoomRepository;
+import Project.Chatzar.Domain.chatRoom.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
