@@ -4,18 +4,17 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import org.aspectj.util.IStructureModel;
 
 import javax.crypto.SecretKey;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
-public class TokenProvider {
+public class JwtTokenProvider {
     private final SecretKey key;
     private final JwtProperties props;
 
-    public TokenProvider(SecretKey key, JwtProperties props) {
+    public JwtTokenProvider(JwtProperties props) {
         this.key = key;
         this.props = props;
     }
