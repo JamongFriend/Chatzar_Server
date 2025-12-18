@@ -2,11 +2,13 @@ package Project.Chatzar.presentation.controller;
 
 import Project.Chatzar.application.AuthService;
 import Project.Chatzar.presentation.dto.auth.LoginRequest;
-import Project.Chatzar.presentation.dto.MemberResponse;
-import Project.Chatzar.presentation.dto.RegisterRequest;
+import Project.Chatzar.presentation.dto.auth.ReissueRequest;
+import Project.Chatzar.presentation.dto.auth.SignUpRequest;
+import Project.Chatzar.presentation.dto.auth.TokenResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,15 +21,25 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<Long> register(@RequestBody RegisterRequest request) {
-        Long memberId = authService.register(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(memberId);
+    public ResponseEntity<Long> register(@Valid @RequestBody SignUpRequest request) {
+        return ResponseEntity.ok(authService.signUp(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<MemberResponse> login(@RequestBody LoginRequest request) {
-        MemberResponse response = authService.login(request);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest request) {
+        return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/reissue")
+    public ResponseEntity<TokenResponse> reissue(@Valid @RequestBody ReissueRequest request) {
+        return ResponseEntity.ok(authService.reissue(request));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(Authentication authentication) {
+        Long memberId = (Long) authentication.getPrincipal();
+        authService.logout(memberId);
+        return ResponseEntity.noContent().build();
     }
 
 }
