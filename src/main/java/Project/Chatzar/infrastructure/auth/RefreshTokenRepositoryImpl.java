@@ -2,9 +2,11 @@ package Project.Chatzar.infrastructure.auth;
 
 import Project.Chatzar.Domain.auth.RefreshToken;
 import Project.Chatzar.Domain.auth.RefreshTokenRepository;
+import Project.Chatzar.Domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -13,22 +15,28 @@ public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
     private final RefreshTokenJpaRepository refreshTokenJpaRepository;
 
     @Override
-    public Optional<RefreshToken> findByMemberId(Long memberId) {
-        return refreshTokenJpaRepository.findByMemberId(memberId);
+    public Optional<RefreshToken> findValidByMemberId(Long memberId) {
+        return refreshTokenJpaRepository.findTopByMemberIdAndRevokedFalseOrderByIdDesc(memberId)
+                .filter(rt -> rt.getExpiresAt().isAfter(LocalDateTime.now()));
     }
 
     @Override
-    public Optional<RefreshToken> findByToken(String token) {
-        return refreshTokenJpaRepository.findByToken(token);
+    public boolean existsByEmail(String email) {
+        return refreshTokenJpaRepository.existsByEmail(email);
     }
 
     @Override
-    public RefreshToken save(RefreshToken refreshToken) {
-        return refreshTokenJpaRepository.save(refreshToken);
+    public boolean existsByNickname(String nickname) {
+        return refreshTokenJpaRepository.existsByNickname(nickname);
     }
 
     @Override
-    public void delete(RefreshToken refreshToken) {
+    public RefreshToken save(RefreshToken token) {
+        return refreshTokenJpaRepository.save(token);
+    }
 
+    @Override
+    public void deleteByMemberId(Long memberId) {
+        refreshTokenJpaRepository.deleteByMemberId(memberId);
     }
 }

@@ -18,7 +18,7 @@ public class RefreshToken {
     private Long id;
 
     @Column(nullable = false, unique = true, length = 500)
-    private String token;
+    private String refreshTokenHash;
 
     @Column(nullable = false)
     private Long memberId;
@@ -26,19 +26,18 @@ public class RefreshToken {
     @Column(nullable = false)
     private LocalDateTime expiresAt;
 
+    @Column(nullable = false)
+    private boolean revoked;
+
     @Builder
-    private RefreshToken(Long memberId, String token, LocalDateTime expiresAt) {
+    public RefreshToken(Long memberId, String refreshTokenHash, LocalDateTime expiresAt) {
         this.memberId = memberId;
-        this.token = token;
+        this.refreshTokenHash = refreshTokenHash;
         this.expiresAt = expiresAt;
+        this.revoked = revoked;
     }
 
-    public void rotate(String newToken, LocalDateTime newExpiresAt) {
-        this.token = newToken;
-        this.expiresAt = newExpiresAt;
-    }
-
-    public boolean isExpired(LocalDateTime now) {
-        return expiresAt.isBefore(now);
+    public void revoke() {
+        this.revoked = true;
     }
 }

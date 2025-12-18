@@ -6,11 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface RefreshTokenJpaRepository  extends JpaRepository<RefreshToken, Long> {
-    Optional<RefreshToken> findByMemberId(Long memberId);
+    Optional<RefreshToken> findTopByMemberIdAndRevokedFalseOrderByIdDesc(Long memberId);
 
-    Optional<RefreshToken> findByToken(String token);
+    boolean existsByEmail(String email);
 
-    RefreshToken save(RefreshToken refreshToken);
+    boolean existsByNickname(String nickname);
 
-    void delete(RefreshToken refreshToken);
+    RefreshToken save(RefreshToken token);
+
+    void deleteByMemberId(Long memberId);
 }

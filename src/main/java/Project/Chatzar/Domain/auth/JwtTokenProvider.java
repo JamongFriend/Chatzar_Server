@@ -24,6 +24,14 @@ public class JwtTokenProvider {
         this.refreshExpMillis = Duration.ofDays(refreshExpDays).toMillis();
     }
 
+    public JwtTokenProvider(JwtProperties props) {
+        this(
+                props.secret(),
+                props.accessTokenExpMinutes(),
+                props.refreshTokenExpDays()
+        );
+    }
+
     public String createAccessToken(Long memberId, String email) {
         return createToken(memberId, email, accessExpMillis);
     }
