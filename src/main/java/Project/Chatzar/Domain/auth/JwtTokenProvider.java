@@ -1,67 +1,63 @@
 package Project.Chatzar.Domain.auth;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.time.Duration;
 import java.util.Date;
 
+@Component
 public class JwtTokenProvider {
-    private final SecretKey key;
-    private final JwtProperties props;
+    private final Key key;
+    private final long accessExpMillis;
+    private final long refreshExpMillis;
 
-    public JwtTokenProvider(JwtProperties props) {
-        this.key = key;
-        this.props = props;
+    public JwtTokenProvider(@Value("${jwt.secret}") String secret,
+                            @Value("${jwt.access-exp-min}") long accessExpMin,
+                            @Value("${jwt.refresh-exp-days}") long refreshExpDays) {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.accessExpMillis = Duration.ofMinutes(accessExpMin).toMillis();
+        this.refreshExpMillis = Duration.ofDays(refreshExpDays).toMillis();
     }
 
-    public String createAccessToken(Long memberId, String email){
-        Instant now = Instant.now();
-        Instant exp = now.plus(props.accessTokenExpMinutes(), ChronoUnit.MINUTES);
-
-        return Jwts.builder()
-                .subject(String.valueOf(memberId))
-                .claim("email", email)
-                .issuedAt(Date.from(now))
-                .expiration(Date.from(exp))
-                .signWith(key, Jwts.SIG.HS256)
-                .compact();
+    public String createAccessToken(Long memberId, String email) {
+        return createToken(memberId, email, accessExpMillis);
     }
 
-    public String createRefreshToken(Long memberId, String email){
-        Instant now = Instant.now();
-        Instant exp = now.plus(props.refreshTokenExpDays(), ChronoUnit.DAYS);
+    public String createRefreshToken(Long memberId, String email) {
+        return createToken(memberId, email, refreshExpMillis);
+    }
+
+    private String createToken(Long memberId, String email, long expMillis) {
+        Date now = new Date();
+        Date exp = new Date(now.getTime() + expMillis);
 
         return Jwts.builder()
-                .subject(String.valueOf(memberId))
+                .setSubject(String.valueOf(memberId))
                 .claim("email", email)
-                .issuedAt(Date.from(now))
-                .expiration(Date.from(exp))
-                .signWith(key, Jwts.SIG.HS256)
+                .setIssuedAt(now)
+                .setExpiration(exp)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public Jws<Claims> parse(String token) {
         return Jwts.parser()
-                .verifyWith(key)
+                .setSigningKey(key)
                 .build()
-                .parseSignedClaims(token);
-    }
-
-    public boolean isValid(String token) {
-        try {
-            parse(token);
-            return true;
-        } catch (JwtException | IllegalArgumentException e) {
-            return false;
-        }
+                .parseClaimsJws(token);
     }
 
     public Long getMemberId(String token) {
-        return Long.parseLong(parse(token).getPayload().getSubject());
+        return Long.parseLong(parse(token).getBody().getSubject());
+    }
+
+    public String getEmail(String token) {
+        Object v = parse(token).getBody().get("email");
+        return v == null ? null : v.toString();
     }
 }
