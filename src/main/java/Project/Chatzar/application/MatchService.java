@@ -4,7 +4,7 @@ import Project.Chatzar.Domain.chatRoom.ChatRoom;
 import Project.Chatzar.Domain.match.matchPreference.MatchPreference;
 import Project.Chatzar.Domain.match.matchRequest.MatchRequest;
 import Project.Chatzar.Domain.match.matchRequest.MatchRequestStatus;
-import Project.Chatzar.presentation.dto.MatchResult;
+import Project.Chatzar.presentation.dto.match.MatchResult;
 import Project.Chatzar.Domain.match.*;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.chatRoom.ChatRoomRepository;
