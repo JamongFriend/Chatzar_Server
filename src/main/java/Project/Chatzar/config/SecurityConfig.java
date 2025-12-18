@@ -1,9 +1,8 @@
 package Project.Chatzar.config;
 
 import Project.Chatzar.Domain.auth.JwtAuthFilter;
-import Project.Chatzar.Domain.auth.JwtProperties;
 import Project.Chatzar.Domain.auth.JwtTokenProvider;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,12 +13,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableConfigurationProperties(JwtProperties.class)
+@RequiredArgsConstructor
 public class SecurityConfig {
-    @Bean
-    public JwtTokenProvider jwtTokenProvider(JwtProperties props) {
-        return new JwtTokenProvider(props);
-    }
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtTokenProvider provider) throws Exception {

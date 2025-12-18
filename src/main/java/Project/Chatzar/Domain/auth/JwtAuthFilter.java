@@ -32,9 +32,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             if (jwtTokenProvider.isValid(token)) {
                 Long memberId = jwtTokenProvider.getMemberId(token);
 
-                var auth = new UsernamePasswordAuthenticationToken(
-                        memberId, null, List.of()
-                );
+                var auth = new UsernamePasswordAuthenticationToken(memberId, null, List.of());
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
         }
