@@ -1,7 +1,7 @@
 package Project.Chatzar.presentation.controller;
 
 import Project.Chatzar.application.AuthService;
-import Project.Chatzar.presentation.dto.LoginRequest;
+import Project.Chatzar.presentation.dto.auth.LoginRequest;
 import Project.Chatzar.presentation.dto.MemberResponse;
 import Project.Chatzar.presentation.dto.RegisterRequest;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package Project.Chatzar.presentation.dto;
+package Project.Chatzar.presentation.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
 

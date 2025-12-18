@@ -1,4 +1,4 @@
-package Project.Chatzar.presentation.dto;
+package Project.Chatzar.presentation.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

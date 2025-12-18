@@ -1,10 +1,7 @@
 package Project.Chatzar.application;
 
 import Project.Chatzar.Domain.member.Member;
-import Project.Chatzar.Domain.member.MemberStatus;
-import Project.Chatzar.presentation.dto.LoginRequest;
 import Project.Chatzar.presentation.dto.MemberResponse;
-import Project.Chatzar.presentation.dto.RegisterRequest;
 import Project.Chatzar.Domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

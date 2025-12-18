@@ -52,6 +52,15 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token);
     }
 
+    public boolean isValid(String token) {
+        try {
+            parse(token); // 서명/만료/형식 검증까지 여기서 다 걸림
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
     public Long getMemberId(String token) {
         return Long.parseLong(parse(token).getBody().getSubject());
     }
