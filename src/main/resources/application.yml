@@ -1,6 +1,9 @@
 spring:
   application:
-  jwt:
-    secret: "CHANGE_ME_TO_LONG_RANDOM_SECRET_CHANGE_ME_TO_LONG_RANDOM_SECRET"
-    access-token-exp-minutes: 15
-    refresh-token-exp-days: 14
+    name: chatzar
+
+jwt:
+  secret: "CHANGE_ME_TO_LONG_RANDOM_SECRET_CHANGE_ME_TO_LONG_RANDOM_SECRET"
+  issuer: "chatzar"
+  access-token-exp-minutes: 15
+  refresh-token-exp-days: 14
