@@ -1,16 +1,12 @@
 package Project.Chatzar.application;
 
-import Project.Chatzar.config.JWT.JwtProperties;
 import Project.Chatzar.Domain.auth.JwtTokenProvider;
 import Project.Chatzar.Domain.auth.RefreshToken;
 import Project.Chatzar.Domain.auth.RefreshTokenRepository;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.member.MemberRepository;
 import Project.Chatzar.Domain.member.MemberStatus;
-import Project.Chatzar.presentation.dto.auth.LoginRequest;
-import Project.Chatzar.presentation.dto.auth.ReissueRequest;
-import Project.Chatzar.presentation.dto.auth.SignUpRequest;
-import Project.Chatzar.presentation.dto.auth.TokenResponse;
+import Project.Chatzar.presentation.dto.auth.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -61,7 +57,7 @@ public class AuthService {
         String refresh = jwtTokenProvider.createRefreshToken(member.getId(), member.getEmail());
 
         String refreshHash = passwordEncoder.encode(refresh);
-        LocalDateTime expiresAt = LocalDateTime.now().plusDays(jwtProperties.refreshExpDays());
+        LocalDateTime expiresAt = LocalDateTime.now().plusDays(jwtProperties.refreshTokenExpDays());
 
         repository.deleteByMemberId(member.getId());
         repository.save(new RefreshToken(member.getId(), refreshHash, expiresAt));
@@ -94,7 +90,7 @@ public class AuthService {
 
         saved.revoke(); // 이전 토큰 폐기(선택)
 
-        LocalDateTime newExpiresAt = LocalDateTime.now().plusDays(jwtProperties.refreshExpDays());
+        LocalDateTime newExpiresAt = LocalDateTime.now().plusDays(jwtProperties.refreshTokenExpDays());
         repository.save(new RefreshToken(memberId, passwordEncoder.encode(newRefresh), newExpiresAt));
 
         return TokenResponse.builder()

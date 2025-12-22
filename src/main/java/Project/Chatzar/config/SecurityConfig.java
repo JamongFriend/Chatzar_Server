@@ -1,4 +1,4 @@
-package Project.Chatzar.config.JWT;
+package Project.Chatzar.config;
 
 import Project.Chatzar.Domain.auth.JwtAuthFilter;
 import Project.Chatzar.Domain.auth.JwtTokenProvider;
