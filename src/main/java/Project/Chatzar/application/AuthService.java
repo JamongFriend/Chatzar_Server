@@ -1,5 +1,6 @@
 package Project.Chatzar.application;
 
+import Project.Chatzar.config.JwtProperties;
 import Project.Chatzar.Domain.auth.JwtTokenProvider;
 import Project.Chatzar.Domain.auth.RefreshToken;
 import Project.Chatzar.Domain.auth.RefreshTokenRepository;
@@ -25,20 +26,21 @@ public class AuthService {
     private final RefreshTokenRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final JwtProperties jwtProperties;
 
     @Transactional
     public Long signUp(SignUpRequest request) {
-        if(repository.existsByEmail(request.email())){
+        if(memberRepository.existsByEmail(request.email())){
             throw new IllegalArgumentException("이미 사용 중인 이메일 입니다.");
         }
 
-        if(repository.existsByNickname(request.nickname())){
+        if(memberRepository.existsByNickname(request.nickname())){
             throw new IllegalArgumentException("이미 사용 중인 닉네임 입니다.");
         }
         Member member = new Member(
                 request.name(),
                 request.email(),
-                request.password(),
+                passwordEncoder.encode(request.password()),
                 request.nickname(),
                 request.age(),
                 MemberStatus.ACTIVE);
@@ -59,7 +61,7 @@ public class AuthService {
         String refresh = jwtTokenProvider.createRefreshToken(member.getId(), member.getEmail());
 
         String refreshHash = passwordEncoder.encode(refresh);
-        LocalDateTime expiresAt = LocalDateTime.now().plusDays(14);
+        LocalDateTime expiresAt = LocalDateTime.now().plusDays(jwtProperties.refreshExpDays());
 
         repository.deleteByMemberId(member.getId());
         repository.save(new RefreshToken(member.getId(), refreshHash, expiresAt));
@@ -82,7 +84,7 @@ public class AuthService {
         RefreshToken saved = repository.findValidByMemberId(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("저장된 RefreshToken이 없거나 만료되었습니다."));
 
-        // ✅ 저장된 해시와 비교
+        // 저장된 해시와 비교
         if (!passwordEncoder.matches(request.refreshToken(), saved.getRefreshTokenHash())) {
             throw new IllegalArgumentException("RefreshToken이 일치하지 않습니다.");
         }
@@ -91,7 +93,9 @@ public class AuthService {
         String newRefresh = jwtTokenProvider.createRefreshToken(memberId, email);
 
         saved.revoke(); // 이전 토큰 폐기(선택)
-        repository.save(new RefreshToken(memberId, passwordEncoder.encode(newRefresh), LocalDateTime.now().plusDays(14)));
+
+        LocalDateTime newExpiresAt = LocalDateTime.now().plusDays(jwtProperties.refreshExpDays());
+        repository.save(new RefreshToken(memberId, passwordEncoder.encode(newRefresh), newExpiresAt));
 
         return TokenResponse.builder()
                 .accessToken(newAccess)

@@ -12,11 +12,11 @@ public interface MemberRepository {
 
     boolean existsByEmail(String email);
 
-    Optional<Member> findByNickname(String nickname);
-
     boolean existsByNickname(String nickname);
 
     Member save(Member member);
 
     Optional<Member> findById(Long memberId);
+
+    Optional<Member> findByNickname(String nickname);
 }

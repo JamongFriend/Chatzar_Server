@@ -21,16 +21,6 @@ public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
     }
 
     @Override
-    public boolean existsByEmail(String email) {
-        return refreshTokenJpaRepository.existsByEmail(email);
-    }
-
-    @Override
-    public boolean existsByNickname(String nickname) {
-        return refreshTokenJpaRepository.existsByNickname(nickname);
-    }
-
-    @Override
     public RefreshToken save(RefreshToken token) {
         return refreshTokenJpaRepository.save(token);
     }

@@ -34,7 +34,7 @@ public class RefreshToken {
         this.memberId = memberId;
         this.refreshTokenHash = refreshTokenHash;
         this.expiresAt = expiresAt;
-        this.revoked = revoked;
+        this.revoked = false;
     }
 
     public void revoke() {
