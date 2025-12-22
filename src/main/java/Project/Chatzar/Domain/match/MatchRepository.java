@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
 public interface MatchRepository {
     List<Match> findByMemberAIdOrMemberBId(Long memberAId, Long memberBId);
 

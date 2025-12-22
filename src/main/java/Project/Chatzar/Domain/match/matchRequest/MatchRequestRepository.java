@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
 public interface MatchRequestRepository {
 
     // 현재 대기 중인 요청들을 가져오는 쿼리
