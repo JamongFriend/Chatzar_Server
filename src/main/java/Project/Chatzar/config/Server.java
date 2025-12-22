@@ -1,21 +1,31 @@
 package Project.Chatzar.config;
 
+import Project.Chatzar.application.MessageService;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Server {
     int PORT = 8000;
     private final ServerSocket serverSocket;
+    private final MessageService messageService;
+    private final ChatRoomSessionManager chatRoomSessionManager;
 
     // 접속한 클라이언트들 관리
-    private final List<ClientHandler> clients = Collections.synchronizedList(new ArrayList<>());
+    private final List<ClientHandler> clients = new CopyOnWriteArrayList<>();
 
-    public Server() throws IOException {
+    public Server(int port,
+                  MessageService messageService,
+                  ChatRoomSessionManager chatRoomSessionManager) throws IOException {
+        this.PORT = port;
         this.serverSocket = new ServerSocket(PORT);
+        this.messageService = messageService;
+        this.chatRoomSessionManager = chatRoomSessionManager;
     }
 
     //서버 시작
@@ -29,7 +39,7 @@ public class Server {
                 System.out.println("클라이언트 접속 : " + socket.getRemoteSocketAddress());
 
                 // 클라이언트 하나당 스레드 하나
-                ClientHandler clientHandler = new ClientHandler(socket, this);
+                ClientHandler clientHandler = new ClientHandler(socket, this, messageService, chatRoomSessionManager);
                 clients.add(clientHandler);
 
                 Thread thread = new Thread(clientHandler);
