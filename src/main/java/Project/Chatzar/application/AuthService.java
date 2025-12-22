@@ -1,6 +1,6 @@
 package Project.Chatzar.application;
 
-import Project.Chatzar.config.JwtProperties;
+import Project.Chatzar.config.JWT.JwtProperties;
 import Project.Chatzar.Domain.auth.JwtTokenProvider;
 import Project.Chatzar.Domain.auth.RefreshToken;
 import Project.Chatzar.Domain.auth.RefreshTokenRepository;

@@ -1,4 +1,4 @@
-package Project.Chatzar.config;
+package Project.Chatzar.config.JWT;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
