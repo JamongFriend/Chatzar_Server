@@ -8,9 +8,9 @@ import java.util.List;
 
 @Repository
 public interface MessageJpaRepository  extends JpaRepository<Message, Long> {
-    List<Message> findByChatRoomIdOrderByCreatedAtAsc(Long chatRoomId);
+    List<Message> findTop30ByChatRoomIdOrderByIdAsc(Long chatRoomId);
 
-    List<Message> findByChatRoomIdAndIdLessThanOrderByIdDesc(Long chatRoomId, Long lastMessageId);
+    List<Message> findTop30ByChatRoomIdAndIdLessThanOrderByIdDesc(Long chatRoomId, Long lastMessageId);
 
     Message save(Message message);
 }

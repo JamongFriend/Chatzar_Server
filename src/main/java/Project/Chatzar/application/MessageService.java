@@ -40,16 +40,14 @@ public class MessageService {
     }
 
     @Transactional(readOnly = true)
-    public List<Message> getRecentMessage(Long roomId, int size) {
-        List<Message> desc = messageRepository.findByChatRoomIdOrderByCreatedAtAsc(roomId);
-        Collections.reverse(desc);
-        return desc;
+    public List<Message> getRecentMessages(Long roomId) {
+        return messageRepository.findTop30ByChatRoomIdOrderByIdAsc(roomId);
     }
 
     @Transactional(readOnly = true)
     public List<Message> getOlderMessages(Long roomId, Long lastMessageId) {
         List<Message> desc = messageRepository
-                .findByChatRoomIdAndIdLessThanOrderByIdDesc(roomId, lastMessageId);
+                .findTop30ByChatRoomIdAndIdLessThanOrderByIdDesc(roomId, lastMessageId);
         Collections.reverse(desc);
         return desc;
     }

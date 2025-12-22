@@ -31,37 +31,69 @@ public class ClientHandler implements Runnable  {
         }
     }
 
-
     @Override
     public void run() {
         try {
             sendMessage("서버에 연결되었습니다. 메시지를 입력하세요.");
-
             String line;
-            while((line = in.readLine()) != null){
-                String[] tokens = line.split(":");
-                String code = tokens[0];
-                switch (code) {
-                    case "SEND" -> {
-                        Long roomId = Long.parseLong(tokens[1]);
-                        Long senderId = Long.parseLong(tokens[2]);
-                        String content = tokens[3];
 
-                        messageService.sendMessage(roomId, senderId, content);
-                    }
-                    case "JOIN" -> {
-                        Long roomId = Long.parseLong(tokens[1]);
-                        Long memberId = Long.parseLong(tokens[2]);
-                        chatRoomSessionManager.join(roomId, memberId, this);
-                    }
-                    case "QUIT" -> {
-                        Long memberId = Long.parseLong(tokens[1]);
-                        chatRoomSessionManager.leaveRooms(memberId, this);
-                        return;
+            while((line = in.readLine()) != null){
+                String[] tokens = line.split(":", 4);
+                String code = tokens[0];
+
+                try {
+                    switch (code) {
+                        case "JOIN" -> {
+                            Long roomId = Long.parseLong(tokens[1]);
+                            Long memberId = Long.parseLong(tokens[2]);
+                            chatRoomSessionManager.join(roomId, memberId, this);
+                            sendMessage("OK:JOIN:" + roomId);
+
+                            // 최근 30개 히스토리 내려주기
+                            messageService.getRecentMessages(roomId).forEach(m -> {
+                                // HISTORY_ITEM:roomId:messageId:senderId:content
+                                sendMessage("HISTORY_ITEM:" + roomId + ":" + m.getId() + ":" + m.getMember().getId() + ":" + m.getContent());
+                            });
+                            sendMessage("OK:HISTORY_END:" + roomId);
+                        }
+                        case "SEND" -> {
+                            Long roomId = Long.parseLong(tokens[1]);
+                            Long senderId = Long.parseLong(tokens[2]);
+                            // String content = tokens[3];
+                            String content = tokens.length >= 4 ? tokens[3] : "";
+
+                            var saved = messageService.sendMessage(roomId, senderId, content);
+
+                            // MESSAGE:roomId:messageId:senderId:content
+                            String payload = "MESSAGE:" + roomId + ":" + saved.getId() + ":" + senderId + ":" + saved.getContent();
+                            chatRoomSessionManager.broadcast(roomId, payload);
+
+                            // 보낸 사람에게도 ACK
+                            sendMessage("OK:SEND:" + roomId + ":" + saved.getId());
+                        }
+                        case "OLDER" -> {
+                            // OLDER:roomId:lastMessageId
+                            Long roomId = Long.parseLong(tokens[1]);
+                            Long lastMessageId = Long.parseLong(tokens[2]);
+
+                            messageService.getOlderMessages(roomId, lastMessageId).forEach(m -> {
+                                sendMessage("HISTORY_ITEM:" + roomId + ":" + m.getId() + ":" + m.getMember().getId() + ":" + m.getContent());
+                            });
+                            sendMessage("OK:OLDER_END:" + roomId);
+                        }
+                        case "QUIT" -> {
+                            Long memberId = Long.parseLong(tokens[1]);
+                            chatRoomSessionManager.leaveRooms(memberId, this);
+                            sendMessage("OK:QUIT");
+                            return;
+                        }
                     }
                 }
+                catch (Exception e) {
+                    sendMessage("ERROR:" + code + ":" + e.getMessage());
+                }
             }
-        } catch (IOException e){
+        } catch (Exception e){
             System.out.println("클라이언트 연결 오류: " + e.getMessage());
         } finally {
             close();

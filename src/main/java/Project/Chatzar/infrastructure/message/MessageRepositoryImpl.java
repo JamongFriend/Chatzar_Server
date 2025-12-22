@@ -13,13 +13,13 @@ public class MessageRepositoryImpl implements MessageRepository {
     private final MessageJpaRepository messageJpaRepository;
 
     @Override
-    public List<Message> findByChatRoomIdOrderByCreatedAtAsc(Long chatRoomId) {
-        return messageJpaRepository.findByChatRoomIdOrderByCreatedAtAsc(chatRoomId);
+    public List<Message> findTop30ByChatRoomIdOrderByIdAsc(Long chatRoomId) {
+        return messageJpaRepository.findTop30ByChatRoomIdOrderByIdAsc(chatRoomId);
     }
 
     @Override
-    public List<Message> findByChatRoomIdAndIdLessThanOrderByIdDesc(Long chatRoomId, Long lastMessageId) {
-        return messageJpaRepository.findByChatRoomIdAndIdLessThanOrderByIdDesc(chatRoomId, lastMessageId);
+    public List<Message> findTop30ByChatRoomIdAndIdLessThanOrderByIdDesc(Long chatRoomId, Long lastMessageId) {
+        return messageJpaRepository.findTop30ByChatRoomIdAndIdLessThanOrderByIdDesc(chatRoomId, lastMessageId);
     }
 
     @Override
