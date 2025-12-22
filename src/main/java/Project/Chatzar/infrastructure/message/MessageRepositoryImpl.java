@@ -21,4 +21,9 @@ public class MessageRepositoryImpl implements MessageRepository {
     public List<Message> findByChatRoomIdAndIdLessThanOrderByIdDesc(Long chatRoomId, Long lastMessageId) {
         return messageJpaRepository.findByChatRoomIdAndIdLessThanOrderByIdDesc(chatRoomId, lastMessageId);
     }
+
+    @Override
+    public Message save(Message message) {
+        return messageJpaRepository.save(message);
+    }
 }

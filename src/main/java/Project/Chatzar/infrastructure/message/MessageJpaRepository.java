@@ -11,4 +11,6 @@ public interface MessageJpaRepository  extends JpaRepository<Message, Long> {
     List<Message> findByChatRoomIdOrderByCreatedAtAsc(Long chatRoomId);
 
     List<Message> findByChatRoomIdAndIdLessThanOrderByIdDesc(Long chatRoomId, Long lastMessageId);
+
+    Message save(Message message);
 }

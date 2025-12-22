@@ -9,4 +9,6 @@ public interface MessageRepository{
     List<Message> findByChatRoomIdOrderByCreatedAtAsc(Long chatRoomId);
 
     List<Message> findByChatRoomIdAndIdLessThanOrderByIdDesc(Long chatRoomId, Long lastMessageId);
+
+    Message save(Message message);
 }

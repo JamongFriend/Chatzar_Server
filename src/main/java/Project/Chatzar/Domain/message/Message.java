@@ -35,4 +35,8 @@ public class Message {
         this.member = member;
         this.content = content;
     }
+
+    public static Message create(ChatRoom chatRoom, Member sender, String content) {
+        return new Message(chatRoom, sender, content);
+    }
 }
