@@ -2,7 +2,6 @@ package Project.Chatzar.Domain.auth;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import Project.Chatzar.presentation.dto.auth.JwtProperties;
@@ -16,21 +15,13 @@ public class JwtTokenProvider {
     private final Key key;
     private final long accessExpMillis;
     private final long refreshExpMillis;
-
-    public JwtTokenProvider(@Value("${jwt.secret}") String secret,
-                            @Value("${jwt.access-exp-min}") long accessExpMin,
-                            @Value("${jwt.refresh-exp-days}") long refreshExpDays) {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-        this.accessExpMillis = Duration.ofMinutes(accessExpMin).toMillis();
-        this.refreshExpMillis = Duration.ofDays(refreshExpDays).toMillis();
-    }
+    private final String issuer;
 
     public JwtTokenProvider(JwtProperties props) {
-        this(
-                props.secret(),
-                props.accessTokenExpMinutes(),
-                props.refreshTokenExpDays()
-        );
+        this.key = Keys.hmacShaKeyFor(props.secret().getBytes(StandardCharsets.UTF_8));
+        this.accessExpMillis = Duration.ofMinutes(props.accessTokenExpMinutes()).toMillis();
+        this.refreshExpMillis = Duration.ofDays(props.refreshTokenExpDays()).toMillis();
+        this.issuer = props.issuer();
     }
 
     public String createAccessToken(Long memberId, String email) {
@@ -47,6 +38,7 @@ public class JwtTokenProvider {
 
         return Jwts.builder()
                 .setSubject(String.valueOf(memberId))
+                .setIssuer(issuer)
                 .claim("email", email)
                 .setIssuedAt(now)
                 .setExpiration(exp)

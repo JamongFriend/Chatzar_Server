@@ -4,10 +4,9 @@ import Project.Chatzar.application.MemberService;
 import Project.Chatzar.presentation.dto.MemberResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/member")
 public class MemberController {
