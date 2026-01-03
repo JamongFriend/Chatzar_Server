@@ -16,7 +16,8 @@ public interface MatchRequestJpaRepository  extends JpaRepository<MatchRequest, 
     List<MatchRequest> findByStatus(MatchRequestStatus status);
 
     Optional<MatchRequest> findFirstByStatusAndRequesterNotOrderByCreatedAtAsc(
-            MatchRequestStatus status,
-            Member requester
+            Member requester, MatchRequestStatus status
     );
+
+    Optional<MatchRequest> findFirstByRequesterAndStatusOrderByCreatedAtDesc(Member requester, MatchRequestStatus status);
 }
