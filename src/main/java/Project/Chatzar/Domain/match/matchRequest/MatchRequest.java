@@ -40,7 +40,10 @@ public class MatchRequest {
         this.status = MatchRequestStatus.MATCHED;
     }
 
-    public void cancel() {
-        this.status = MatchRequestStatus.CANCELED;
+    public void markCancelled() {
+        if (this.status != MatchRequestStatus.WAITING) {
+            throw new IllegalStateException("WAITING 상태만 취소할 수 있습니다.");
+        }
+        this.status = MatchRequestStatus.CANCELLED;
     }
 }

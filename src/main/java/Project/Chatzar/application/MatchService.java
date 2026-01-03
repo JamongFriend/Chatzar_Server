@@ -39,19 +39,33 @@ public class MatchService {
     // 매칭 요청 생성
     @Transactional
     public MatchResult requestMatch(Member member) {
-        //매칭 조건 조회
         MatchCondition matchCondition = matchPreferenceRepository.findByMember(member)
                 .map(MatchPreference::getCondition)
                 .orElse(new MatchCondition(null, null, null, null));
 
-        //매칭 요청 엔티티 생성
         MatchRequest myRequest = new MatchRequest(member, matchCondition);
         matchRequestRepository.save(myRequest);
 
-        // 매칭 시도
         return doMatch(myRequest);
     }
 
+    @Transactional
+    public void cancelMatch (Member member){
+        MatchRequest matchRequest = matchRequestRepository
+                .findFirstByRequesterAndStatusOrderByCreatedAtDesc(member, MatchRequestStatus.WAITING)
+                .orElseThrow(() -> new IllegalStateException("취소할 매칭 대기 요청이 없습니다."));
+
+        matchRequest.markCancelled();
+    }
+
+    public MatchRequestStatus getMyMatchStatus(Member member) {
+        return matchRequestRepository
+                .findFirstByRequesterAndStatusOrderByCreatedAtDesc(member, MatchRequestStatus.WAITING)
+                .map(MatchRequest::getStatus)
+                .orElse(MatchRequestStatus.MATCHED);
+    }
+
+    // 매칭 시도
     @Transactional
     protected MatchResult doMatch(MatchRequest myRequest) {
         if (myRequest.getStatus() != MatchRequestStatus.WAITING) {
@@ -60,8 +74,7 @@ public class MatchService {
         // 나 자신이 아닌, WAITING 상태의 다른 요청 하나 찾기
         var optionalPartner = matchRequestRepository
                 .findFirstByStatusAndRequesterNotOrderByCreatedAtAsc(
-                        MatchRequestStatus.WAITING,
-                        myRequest.getRequester()
+                        myRequest.getRequester(), MatchRequestStatus.WAITING
                 );
         // 상대가 없으면 → 나는 계속 WAITING 상태로 남음
         if (optionalPartner.isEmpty()) {
@@ -72,15 +85,12 @@ public class MatchService {
 
         Member memberA = myRequest.getRequester();
         Member memberB = partnerRequest.getRequester();
-        // Match 엔티티 생성 & 저장
         Match match = new Match(null, memberA, memberB);
         matchRepository.save(match);
 
-        // ChatRoom 엔티티 생성 & 저장
         ChatRoom chatRoom = ChatRoom.create(memberA, memberB);
         chatRoomRepository.save(chatRoom);
 
-        // 두 요청 상태 MATCHED로 변경
         myRequest.markMatched();
         partnerRequest.markMatched();
 
