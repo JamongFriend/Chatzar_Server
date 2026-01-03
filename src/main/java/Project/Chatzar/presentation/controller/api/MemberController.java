@@ -1,4 +1,4 @@
-package Project.Chatzar.presentation.controller;
+package Project.Chatzar.presentation.controller.api;
 
 import Project.Chatzar.application.MemberService;
 import Project.Chatzar.presentation.dto.member.MemberResponse;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/member")
+@RequestMapping("api/v1/member")
 public class MemberController {
     private final MemberService memberService;
 
