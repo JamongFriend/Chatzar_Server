@@ -1,4 +1,4 @@
-package Project.Chatzar.presentation.controller;
+package Project.Chatzar.presentation.controller.api;
 
 import Project.Chatzar.application.AuthService;
 import Project.Chatzar.presentation.dto.auth.LoginRequest;
@@ -8,7 +8,7 @@ import Project.Chatzar.presentation.dto.auth.TokenResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
     private final AuthService authService;
 
@@ -26,7 +26,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<TokenResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 
@@ -36,8 +36,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(Authentication authentication) {
-        Long memberId = (Long) authentication.getPrincipal();
+    public ResponseEntity<Void> logout(@AuthenticationPrincipal Long memberId) {
         authService.logout(memberId);
         return ResponseEntity.noContent().build();
     }
