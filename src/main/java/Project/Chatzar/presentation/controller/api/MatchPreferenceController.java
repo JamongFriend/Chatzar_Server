@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/matchPreference")
+@RequestMapping("/api/v1/match-preference")
 public class MatchPreferenceController {
     private final MatchService matchService;
     private final MemberRepository memberRepository;
