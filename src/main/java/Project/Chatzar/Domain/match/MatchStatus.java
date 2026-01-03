@@ -1,5 +1,5 @@
 package Project.Chatzar.Domain.match;
 
 public enum MatchStatus {
-    ACTIVE, ENDED, CANCELED
+    ACTIVE, ENDED, CANCELLED
 }
