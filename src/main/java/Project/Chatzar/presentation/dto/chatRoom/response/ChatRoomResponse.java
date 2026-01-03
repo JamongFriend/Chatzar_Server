@@ -1,4 +1,4 @@
-package Project.Chatzar.presentation.dto;
+package Project.Chatzar.presentation.dto.chatRoom.response;
 
 import Project.Chatzar.Domain.chatRoom.ChatRoom;
 import Project.Chatzar.Domain.member.Member;

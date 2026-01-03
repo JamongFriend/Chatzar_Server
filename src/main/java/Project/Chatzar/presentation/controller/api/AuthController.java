@@ -1,10 +1,10 @@
 package Project.Chatzar.presentation.controller.api;
 
 import Project.Chatzar.application.AuthService;
-import Project.Chatzar.presentation.dto.auth.LoginRequest;
-import Project.Chatzar.presentation.dto.auth.ReissueRequest;
-import Project.Chatzar.presentation.dto.auth.SignUpRequest;
-import Project.Chatzar.presentation.dto.auth.TokenResponse;
+import Project.Chatzar.presentation.dto.auth.request.LoginRequest;
+import Project.Chatzar.presentation.dto.auth.request.ReissueRequest;
+import Project.Chatzar.presentation.dto.auth.request.SignUpRequest;
+import Project.Chatzar.presentation.dto.auth.response.TokenResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

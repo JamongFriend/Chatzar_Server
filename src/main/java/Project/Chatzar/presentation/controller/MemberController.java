@@ -1,7 +1,7 @@
 package Project.Chatzar.presentation.controller;
 
 import Project.Chatzar.application.MemberService;
-import Project.Chatzar.presentation.dto.MemberResponse;
+import Project.Chatzar.presentation.dto.member.MemberResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

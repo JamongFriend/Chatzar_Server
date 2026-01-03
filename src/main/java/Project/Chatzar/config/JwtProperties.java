@@ -1,4 +1,4 @@
-package Project.Chatzar.presentation.dto.auth;
+package Project.Chatzar.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

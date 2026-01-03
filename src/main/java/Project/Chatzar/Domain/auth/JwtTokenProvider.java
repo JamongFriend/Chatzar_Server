@@ -4,7 +4,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
-import Project.Chatzar.presentation.dto.auth.JwtProperties;
+import Project.Chatzar.config.JwtProperties;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.Duration;

@@ -3,7 +3,7 @@ package Project.Chatzar.presentation.controller.api;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.member.MemberRepository;
 import Project.Chatzar.application.MatchService;
-import Project.Chatzar.presentation.dto.match.MatchResult;
+import Project.Chatzar.presentation.dto.match.response.MatchResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

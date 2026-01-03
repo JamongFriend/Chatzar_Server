@@ -1,4 +1,4 @@
-package Project.Chatzar.presentation.dto.auth;
+package Project.Chatzar.presentation.dto.auth.response;
 
 import lombok.Builder;
 

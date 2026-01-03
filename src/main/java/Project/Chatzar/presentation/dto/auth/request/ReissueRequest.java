@@ -1,7 +1,7 @@
-package Project.Chatzar.presentation.dto.auth;
+package Project.Chatzar.presentation.dto.auth.request;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record RefreshRequest(
+public record ReissueRequest(
         @NotBlank String refreshToken
 ) {}

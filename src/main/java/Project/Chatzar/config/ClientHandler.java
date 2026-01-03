@@ -1,7 +1,7 @@
 package Project.Chatzar.config;
 
 import Project.Chatzar.application.MessageService;
-import Project.Chatzar.presentation.dto.SocketMessage;
+import Project.Chatzar.presentation.dto.message.response.SocketMessage;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.*;

@@ -1,10 +1,9 @@
 package Project.Chatzar.presentation.controller.api;
 
-import Project.Chatzar.Domain.chatRoom.ChatRoomRepository;
 import Project.Chatzar.Domain.message.Message;
 import Project.Chatzar.application.MessageService;
-import Project.Chatzar.presentation.dto.MessageResponse;
-import Project.Chatzar.presentation.dto.request.SendMessageRequest;
+import Project.Chatzar.presentation.dto.message.response.MessageResponse;
+import Project.Chatzar.presentation.dto.message.request.SendMessageRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

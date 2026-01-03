@@ -1,4 +1,4 @@
-package Project.Chatzar.presentation.dto;
+package Project.Chatzar.presentation.dto.member;
 
 
 import Project.Chatzar.Domain.member.MemberStatus;

@@ -1,4 +1,4 @@
-package Project.Chatzar.presentation.dto.request;
+package Project.Chatzar.presentation.dto.match.request;
 
 import Project.Chatzar.Domain.match.MatchCondition;
 

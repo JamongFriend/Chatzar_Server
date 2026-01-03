@@ -1,4 +1,4 @@
-package Project.Chatzar.presentation.dto;
+package Project.Chatzar.presentation.dto.message.response;
 
 import Project.Chatzar.Domain.message.Message;
 

@@ -1,4 +1,4 @@
-package Project.Chatzar.presentation.dto;
+package Project.Chatzar.presentation.dto.message.response;
 
 public record SocketMessage(
         String type,
