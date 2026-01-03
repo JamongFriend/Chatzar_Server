@@ -15,12 +15,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class MessageService {
     private final MessageRepository messageRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final MemberRepository memberRepository;
 
+    @Transactional
     public Message sendMessage(Long roomId, Long senderId, String content) {
         if(content == null || content.trim().isEmpty()) {
             throw new IllegalArgumentException("메시지 내용이 비어있습니다.");
@@ -39,12 +40,10 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
-    @Transactional(readOnly = true)
     public List<Message> getRecentMessages(Long roomId) {
         return messageRepository.findTop30ByChatRoomIdOrderByIdAsc(roomId);
     }
 
-    @Transactional(readOnly = true)
     public List<Message> getOlderMessages(Long roomId, Long lastMessageId) {
         List<Message> desc = messageRepository
                 .findTop30ByChatRoomIdAndIdLessThanOrderByIdDesc(roomId, lastMessageId);
