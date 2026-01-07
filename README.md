@@ -83,7 +83,7 @@ src
     │       │   │   │   └─ MessageController    # 메시지 조회 API
     │       │   │   │   └─ MemberController    
     │       │   │   │
-    │       │   │   └─ ws
+    │       │   │   └─ webSocket
     │       │   │       └─ ChatStompController  # 실시간 채팅(STOMP) 처리
     │       │   │
     │       │   └─ dto
