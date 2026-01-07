@@ -19,6 +19,7 @@ import java.security.Principal;
 public class ChatStompController {
     private final MessageService messageService;
     private final SimpMessagingTemplate messagingTemplate;
+    private final ChatEventService chatEventService;
 
     @MessageMapping("/chat")
     public void handle(SocketMessage payload, Principal principal) {
@@ -50,6 +51,7 @@ public class ChatStompController {
     private void handleJoin(SocketMessage payload, Principal principal) {
         Long memberId = ((StompPrincipal) principal).getMemberId();
 
+        chatEventService.logJoin(payload.roomId(), memberId);
         messagingTemplate.convertAndSend(
                 "/sub/rooms/" + payload.roomId(),
                 payload
