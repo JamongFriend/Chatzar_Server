@@ -1,4 +1,4 @@
-package Project.Chatzar.legacy;
+package Project.Chatzar.legacy.socket;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

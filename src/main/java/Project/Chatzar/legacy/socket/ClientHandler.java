@@ -1,4 +1,4 @@
-package Project.Chatzar.legacy;
+package Project.Chatzar.legacy.socket;
 
 import Project.Chatzar.application.MessageService;
 import Project.Chatzar.presentation.dto.message.response.SocketMessage;
