@@ -1,11 +1,11 @@
-package Project.Chatzar.config;
+package Project.Chatzar.legacy;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-// 채팅방(roomId)마다 현재 접속 중인 소켓 세션(ClientHandler)들을 관리하고, 그 방에 메시지를 뿌려주는(브로드캐스트) 관리자
-
+// “초기에는 raw socket으로 구현했고, 이후 Spring WebSocket으로 리팩토링”
 public class ChatRoomSessionManager {
+    // 채팅방(roomId)마다 현재 접속 중인 소켓 세션(ClientHandler)들을 관리하고, 그 방에 메시지를 뿌려주는(브로드캐스트) 관리자
     // roomId -> 현재 방에 연결된 클라이언트들
     private final ConcurrentHashMap<Long, Set<ClientHandler>> roomSessions = new ConcurrentHashMap<>();
 

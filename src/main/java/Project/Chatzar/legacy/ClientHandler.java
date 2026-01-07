@@ -1,4 +1,4 @@
-package Project.Chatzar.config;
+package Project.Chatzar.legacy;
 
 import Project.Chatzar.application.MessageService;
 import Project.Chatzar.presentation.dto.message.response.SocketMessage;
@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.net.Socket;
 
+// “초기에는 raw socket으로 구현했고, 이후 Spring WebSocket으로 리팩토링”
 public class ClientHandler implements Runnable  {
     private final Socket socket;
     private final Server server;

@@ -1,15 +1,14 @@
-package Project.Chatzar.config;
+package Project.Chatzar.legacy;
 
 import Project.Chatzar.application.MessageService;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+// “초기에는 raw socket으로 구현했고, 이후 Spring WebSocket으로 리팩토링”
 public class Server {
     int PORT = 8000;
     private final ServerSocket serverSocket;
