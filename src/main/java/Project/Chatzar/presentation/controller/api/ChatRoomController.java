@@ -62,13 +62,21 @@ public class ChatRoomController {
         return ResponseEntity.ok(rooms);
     }
 
-    @DeleteMapping("/{roomId}")
+    // 랜덤 채팅 종료 후 방을 나갔을 때 방 잠금으로 변환
+    @PostMapping("/{roomId}/close")
     public ResponseEntity<Void> closeRoom(@AuthenticationPrincipal Long memberId,
                                           @PathVariable Long roomId) {
-        Member me = memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다. id=" + memberId));
+        chatRoomService.closeRandomChatRoom(roomId, memberId);
+        return ResponseEntity.ok().build();
+    }
 
-        chatRoomService.closeRoom(roomId, me);
+    @DeleteMapping("/{roomId}")
+    public ResponseEntity<Void> deleteRoom(@AuthenticationPrincipal Long memberId,
+                                           @PathVariable Long roomId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다. id=" + memberId));
+        chatRoomService.deleteRoom(roomId, member);
         return ResponseEntity.noContent().build();
     }
+
 }
