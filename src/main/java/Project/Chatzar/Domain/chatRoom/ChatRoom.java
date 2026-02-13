@@ -67,6 +67,9 @@ public class ChatRoom {
     }
 
     public Long getOtherMemberId(Long memberId) {
-        return null;
+        if(this.memberA.getId().equals(memberId)){
+            return this.memberB.getId();
+        }
+        return this.memberA.getId();
     }
 }
