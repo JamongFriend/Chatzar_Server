@@ -15,4 +15,6 @@ public interface ChatRoomRepository {
     ChatRoom save(ChatRoom room);
 
     Optional<ChatRoom> findById(Long roomId);
+
+    Optional<ChatRoom> findLockRoomBetweenMembers(Member a, Member b);
 }

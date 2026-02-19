@@ -65,4 +65,10 @@ public class ChatRoomService {
         }
         room.deleteRoom();
     }
+
+    @Transactional
+    public void unlockRelatedChatRoom(Member a, Member b) {
+        chatRoomRepository.findLockRoomBetweenMembers(a, b)
+                .ifPresent(room -> {room.unlock();});
+    }
 }
