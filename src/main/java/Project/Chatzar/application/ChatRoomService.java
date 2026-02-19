@@ -33,21 +33,25 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public void closeRandomChatRoom(Long roomId, Long memberId) {
+    public void closeRandomChatRoom(Long roomId, Member member) {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방입니다. id = " + roomId));
 
         if(chatRoom.getType() == ChatRoomType.RANDOM) {
-            Long partnerId = chatRoom.getOtherMemberId(memberId);
+            Long partnerId = chatRoom.getOtherMemberId(member.getId());
             // TODO: 친구 추가 기능 만든 후 서로 친구인지 확인
             boolean isFriend;
+
+            if(partnerId == null){
+                this.deleteRoom(roomId, member);
+                return;
+            }
 
             if(!isFriend) {
                 chatRoom.lock();
             }else {
                 chatRoom.unlock();
             }
-
         }
     }
 
