@@ -16,4 +16,9 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
     public Optional<Friendship> findById(Long friendshipId) {
         return friendshipJpaRepository.findById(friendshipId);
     }
+
+    @Override
+    public boolean existsByMemberIdAndFriendId(Long memberId, Long partnerId) {
+        return friendshipJpaRepository.existsByMemberIdAndFriendId(memberId, partnerId);
+    }
 }

@@ -2,6 +2,7 @@ package Project.Chatzar.application;
 
 import Project.Chatzar.Domain.chatRoom.ChatRoom;
 import Project.Chatzar.Domain.chatRoom.ChatRoomType;
+import Project.Chatzar.Domain.friendship.FriendshipRepository;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.chatRoom.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
+    private final FriendshipRepository friendshipRepository;
 
     @Transactional
     public ChatRoom createRoom(Member memberA, Member memberB) {
@@ -39,8 +41,7 @@ public class ChatRoomService {
 
         if(chatRoom.getType() == ChatRoomType.RANDOM) {
             Long partnerId = chatRoom.getOtherMemberId(member.getId());
-            // TODO: 친구 추가 기능 만든 후 서로 친구인지 확인
-            boolean isFriend;
+            boolean isFriend = friendshipRepository.existsByMemberIdAndFriendId(member.getId(), partnerId);
 
             if(partnerId == null){
                 this.deleteRoom(roomId, member);
