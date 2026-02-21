@@ -4,7 +4,7 @@ import Project.Chatzar.Domain.chatRoom.ChatRoom;
 import Project.Chatzar.Domain.match.matchPreference.MatchPreference;
 import Project.Chatzar.Domain.match.matchRequest.MatchRequest;
 import Project.Chatzar.Domain.match.matchRequest.MatchRequestStatus;
-import Project.Chatzar.presentation.dto.match.response.MatchResult;
+import Project.Chatzar.presentation.dto.match.response.MatchResponse;
 import Project.Chatzar.Domain.match.*;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.chatRoom.ChatRoomRepository;
@@ -38,7 +38,7 @@ public class MatchService {
 
     // 매칭 요청 생성
     @Transactional
-    public MatchResult requestMatch(Member member) {
+    public MatchResponse requestMatch(Member member) {
         MatchCondition matchCondition = matchPreferenceRepository.findByMember(member)
                 .map(MatchPreference::getCondition)
                 .orElse(new MatchCondition(null, null, null, null));
@@ -46,11 +46,11 @@ public class MatchService {
         MatchRequest myRequest = new MatchRequest(member, matchCondition);
         matchRequestRepository.saveAndFlush(myRequest);
 
-        return MatchResult.waiting();
+        return MatchResponse.waiting();
     }
 
     @Transactional
-    public MatchResult tryMatching(Member member) {
+    public MatchResponse tryMatching(Member member) {
         MatchRequest myRequest = matchRequestRepository
                 .findFirstByRequesterAndStatusOrderByCreatedAtDesc(member, MatchRequestStatus.WAITING)
                 .orElseThrow(() -> new IllegalStateException("대기 중인 매칭 요청이 없습니다."));
@@ -76,9 +76,9 @@ public class MatchService {
 
     // 매칭 시도
     @Transactional
-    protected MatchResult doMatch(MatchRequest myRequest) {
+    protected MatchResponse doMatch(MatchRequest myRequest) {
         if (myRequest.getStatus() != MatchRequestStatus.WAITING) {
-            return MatchResult.waiting();
+            return MatchResponse.waiting();
         }
         // 나 자신이 아닌, WAITING 상태의 다른 요청 하나 찾기
         var optionalPartner = matchRequestRepository
@@ -87,7 +87,7 @@ public class MatchService {
                 );
         // 상대가 없으면 → 나는 계속 WAITING 상태로 남음
         if (optionalPartner.isEmpty()) {
-            return MatchResult.waiting();
+            return MatchResponse.waiting();
         }
 
         MatchRequest partnerRequest = optionalPartner.get();
@@ -103,7 +103,7 @@ public class MatchService {
         myRequest.markMatched();
         partnerRequest.markMatched();
 
-        return MatchResult.matched(match.getId(), chatRoom.getId(), memberB);
+        return MatchResponse.matched(match.getId(), chatRoom.getId(), memberB);
     }
 
 }

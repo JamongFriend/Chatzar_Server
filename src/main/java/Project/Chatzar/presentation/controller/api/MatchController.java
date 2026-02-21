@@ -3,7 +3,7 @@ package Project.Chatzar.presentation.controller.api;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.member.MemberRepository;
 import Project.Chatzar.application.MatchService;
-import Project.Chatzar.presentation.dto.match.response.MatchResult;
+import Project.Chatzar.presentation.dto.match.response.MatchResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,13 +17,13 @@ public class MatchController {
     private final MemberRepository memberRepository;
 
     @PostMapping("/request")
-    public ResponseEntity<MatchResult> requestMatch(@AuthenticationPrincipal Long memberId) {
+    public ResponseEntity<MatchResponse> requestMatch(@AuthenticationPrincipal Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다. id=" + memberId));
 
         matchService.requestMatch(member);
-        MatchResult matchResult = matchService.tryMatching(member);
-        return ResponseEntity.ok(matchResult);
+        MatchResponse matchResponse = matchService.tryMatching(member);
+        return ResponseEntity.ok(matchResponse);
     }
 
     @DeleteMapping("/cancel")

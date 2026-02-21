@@ -1,6 +1,5 @@
 package Project.Chatzar.application;
 
-import Project.Chatzar.Domain.chatRoom.ChatRoom;
 import Project.Chatzar.Domain.chatRoom.ChatRoomRepository;
 import Project.Chatzar.Domain.match.MatchCondition;
 import Project.Chatzar.Domain.match.matchRequest.MatchRequest;
@@ -8,15 +7,13 @@ import Project.Chatzar.Domain.match.matchRequest.MatchRequestRepository;
 import Project.Chatzar.Domain.match.matchRequest.MatchRequestStatus;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.member.MemberRepository;
-import Project.Chatzar.presentation.dto.match.response.MatchResult;
+import Project.Chatzar.presentation.dto.match.response.MatchResponse;
 import Project.Chatzar.testfixture.MemberFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,10 +37,10 @@ class MatchServiceTest {
         memberRepository.save(me);
         matchService.requestMatch(me);
 
-        MatchResult result = matchService.tryMatching(me);
+        MatchResponse result = matchService.tryMatching(me);
 
         // Then
-        assertThat(result.isMatched()).isTrue();
+        assertThat(result.matched()).isTrue();
     }
 
     @Test
@@ -54,10 +51,10 @@ class MatchServiceTest {
         memberRepository.save(me);
 
         // When
-        MatchResult result = matchService.requestMatch(me);
+        MatchResponse result = matchService.requestMatch(me);
 
         // Then
-        assertThat(result.isMatched()).isFalse();
+        assertThat(result.matched()).isFalse();
         MatchRequest request = matchRequestRepository
                 .findFirstByRequesterAndStatusOrderByCreatedAtDesc(me, MatchRequestStatus.WAITING)
                 .orElseThrow();
