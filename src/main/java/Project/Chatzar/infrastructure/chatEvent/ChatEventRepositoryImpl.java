@@ -3,7 +3,9 @@ package Project.Chatzar.infrastructure.chatEvent;
 import Project.Chatzar.Domain.chatEvent.ChatEvent;
 import Project.Chatzar.Domain.chatEvent.ChatEventRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
+@Repository
 @RequiredArgsConstructor
 public class ChatEventRepositoryImpl implements ChatEventRepository {
     private final ChatEventJpaRepository chatEventJpaRepository;
