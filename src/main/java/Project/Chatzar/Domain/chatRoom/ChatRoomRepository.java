@@ -16,5 +16,9 @@ public interface ChatRoomRepository {
 
     Optional<ChatRoom> findById(Long roomId);
 
+    List<ChatRoom> findAll();
+
     Optional<ChatRoom> findLockRoomBetweenMembers(Member a, Member b);
+
+    Long count();
 }

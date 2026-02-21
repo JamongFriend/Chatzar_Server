@@ -40,6 +40,11 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository {
     }
 
     @Override
+    public List<ChatRoom> findAll() {
+        return chatRoomJpaRepository.findAll();
+    }
+
+    @Override
     public Optional<ChatRoom> findLockRoomBetweenMembers(Member m1, Member m2) {
         String jpql = "SELECT cr FROM ChatRoom cr " +
                 "WHERE ((cr.userA =:m1 AND cr.userB =:m2) OR (cr.userA = :m2 AND cr.userB = :m1))" +
@@ -54,5 +59,10 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository {
         }catch (NoResultException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public Long count() {
+        return chatRoomJpaRepository.count();
     }
 }
