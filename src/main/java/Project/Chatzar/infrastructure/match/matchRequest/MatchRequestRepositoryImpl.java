@@ -26,13 +26,13 @@ public class MatchRequestRepositoryImpl implements MatchRequestRepository {
     }
 
     @Override
-    public void save(MatchRequest myRequest) {
-        matchRequestJpaRepository.save(myRequest);
+    public MatchRequest save(MatchRequest myRequest) {
+        return matchRequestJpaRepository.save(myRequest);
     }
 
     @Override
-    public void saveAndFlush(MatchRequest myRequest) {
-        matchRequestJpaRepository.saveAndFlush(myRequest);
+    public MatchRequest saveAndFlush(MatchRequest myRequest) {
+        return matchRequestJpaRepository.saveAndFlush(myRequest);
     }
 
     public Optional<MatchRequest> findFirstByRequesterAndStatusOrderByCreatedAtDesc(Member requester, MatchRequestStatus status) {

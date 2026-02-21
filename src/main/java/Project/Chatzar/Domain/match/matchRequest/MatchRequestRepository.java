@@ -15,7 +15,7 @@ public interface MatchRequestRepository {
 
     Optional<MatchRequest> findFirstByRequesterAndStatusOrderByCreatedAtDesc(Member requester, MatchRequestStatus status);
 
-    void save(MatchRequest myRequest);
+    MatchRequest save(MatchRequest myRequest);
 
-    void saveAndFlush(MatchRequest myRequest);
+    MatchRequest saveAndFlush(MatchRequest myRequest);
 }

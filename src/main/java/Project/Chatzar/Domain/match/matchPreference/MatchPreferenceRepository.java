@@ -12,5 +12,5 @@ public interface MatchPreferenceRepository {
 
     boolean existsByMemberId(Long memberId);
 
-    void save(MatchPreference newPref);
+    MatchPreference save(MatchPreference newPref);
 }

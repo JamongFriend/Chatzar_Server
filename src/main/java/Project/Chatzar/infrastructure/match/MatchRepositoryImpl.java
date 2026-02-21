@@ -20,7 +20,7 @@ public class MatchRepositoryImpl implements MatchRepository {
     }
 
     @Override
-    public void save(Match match) {
-
+    public Match save(Match match) {
+        return matchJpaRepository.save(match);
     }
 }

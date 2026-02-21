@@ -24,7 +24,7 @@ public class MatchPreferenceRepositoryImpl implements MatchPreferenceRepository 
     }
 
     @Override
-    public void save(MatchPreference newPref) {
-
+    public MatchPreference save(MatchPreference newPref) {
+        return matchPreferenceJpaRepository.save(newPref);
     }
 }

@@ -6,5 +6,5 @@ import java.util.Optional;
 public interface MatchRepository {
     Optional<Match> findExactMatch(Long memberAId, Long memberBId);
 
-    void save(Match match);
+    Match save(Match match);
 }
