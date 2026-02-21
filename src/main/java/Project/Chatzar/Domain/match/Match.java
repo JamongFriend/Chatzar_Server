@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Table(name = "matching")
 public class Match {
     @Id
     @GeneratedValue

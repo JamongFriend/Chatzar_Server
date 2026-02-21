@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 public class MatchRequest {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "match_request_id")
     private Long id;
 

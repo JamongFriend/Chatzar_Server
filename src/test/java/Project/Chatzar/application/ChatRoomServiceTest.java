@@ -4,8 +4,11 @@ import Project.Chatzar.Domain.chatRoom.ChatRoom;
 import Project.Chatzar.Domain.chatRoom.ChatRoomRepository;
 import Project.Chatzar.Domain.chatRoom.ChatRoomStatus;
 import Project.Chatzar.Domain.friendship.FriendshipRepository;
+import Project.Chatzar.Domain.match.Match;
+import Project.Chatzar.Domain.match.MatchRepository;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.member.MemberRepository;
+import Project.Chatzar.testfixture.MatchFixture;
 import Project.Chatzar.testfixture.MemberFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +24,7 @@ class ChatRoomServiceTest {
     @Autowired ChatRoomService chatRoomService;
     @Autowired MemberRepository memberRepository;
     @Autowired ChatRoomRepository chatRoomRepository;
-    @Autowired FriendshipRepository friendshipRepository;
+    @Autowired MatchRepository matchRepository;
 
     @Test
     @DisplayName("상대방과 친구가 아닐 때 방을 닫으면 LOCKED 상태가 되어야 한다")
@@ -31,8 +34,10 @@ class ChatRoomServiceTest {
         Member partner = MemberFixture.create("partner@test.com", "상대방");
         memberRepository.save(me);
         memberRepository.save(partner);
+        Match match = MatchFixture.create(me, partner);
+        matchRepository.save(match);
 
-        ChatRoom room = ChatRoom.create(me, partner);
+        ChatRoom room = ChatRoom.create(me, partner, match);
         chatRoomRepository.save(room);
         chatRoomService.closeRandomChatRoom(room.getId(), me.getId());
 

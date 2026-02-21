@@ -1,6 +1,8 @@
 package Project.Chatzar.presentation.controller.api;
 
 import Project.Chatzar.Domain.chatRoom.ChatRoom;
+import Project.Chatzar.Domain.match.Match;
+import Project.Chatzar.Domain.match.MatchRepository;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.member.MemberRepository;
 import Project.Chatzar.application.ChatRoomService;
@@ -19,6 +21,7 @@ import java.util.List;
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
     private final MemberRepository memberRepository;
+    private final MatchRepository matchRepository;
 
     @PostMapping("/create")
     public ResponseEntity<ChatRoomResponse> createRoom (@AuthenticationPrincipal Long memberId,
@@ -28,9 +31,12 @@ public class ChatRoomController {
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다. id=" + memberId));
 
         Member other = memberRepository.findById(request.otherMemberId())
-                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다. id=" + memberId));
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다. id=" + request.otherMemberId()));
 
-        ChatRoom room = chatRoomService.createRoom(me, other);
+        Match match = matchRepository.findExactMatch(me.getId(), other.getId())
+                .orElseThrow(() -> new IllegalArgumentException("유효한 매칭 데이터가 없습니다."));
+
+        ChatRoom room = chatRoomService.createRoom(me, other, match);
 
         return ResponseEntity.ok(ChatRoomResponse.from(room, me));
     }

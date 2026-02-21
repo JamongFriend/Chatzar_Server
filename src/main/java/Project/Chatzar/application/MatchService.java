@@ -44,7 +44,16 @@ public class MatchService {
                 .orElse(new MatchCondition(null, null, null, null));
 
         MatchRequest myRequest = new MatchRequest(member, matchCondition);
-        matchRequestRepository.save(myRequest);
+        matchRequestRepository.saveAndFlush(myRequest);
+
+        return MatchResult.waiting();
+    }
+
+    @Transactional
+    public MatchResult tryMatching(Member member) {
+        MatchRequest myRequest = matchRequestRepository
+                .findFirstByRequesterAndStatusOrderByCreatedAtDesc(member, MatchRequestStatus.WAITING)
+                .orElseThrow(() -> new IllegalStateException("대기 중인 매칭 요청이 없습니다."));
 
         return doMatch(myRequest);
     }
@@ -73,7 +82,7 @@ public class MatchService {
         }
         // 나 자신이 아닌, WAITING 상태의 다른 요청 하나 찾기
         var optionalPartner = matchRequestRepository
-                .findFirstByStatusAndRequesterNotOrderByCreatedAtAsc(
+                .findFirstByRequesterNotAndStatusOrderByCreatedAtAsc(
                         myRequest.getRequester(), MatchRequestStatus.WAITING
                 );
         // 상대가 없으면 → 나는 계속 WAITING 상태로 남음
@@ -88,7 +97,7 @@ public class MatchService {
         Match match = new Match(null, memberA, memberB);
         matchRepository.save(match);
 
-        ChatRoom chatRoom = ChatRoom.create(memberA, memberB);
+        ChatRoom chatRoom = ChatRoom.create(memberA, memberB, match);
         chatRoomRepository.save(chatRoom);
 
         myRequest.markMatched();

@@ -3,6 +3,7 @@ package Project.Chatzar.application;
 import Project.Chatzar.Domain.chatRoom.ChatRoom;
 import Project.Chatzar.Domain.chatRoom.ChatRoomType;
 import Project.Chatzar.Domain.friendship.FriendshipRepository;
+import Project.Chatzar.Domain.match.Match;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.chatRoom.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,8 @@ public class ChatRoomService {
     private final FriendshipRepository friendshipRepository;
 
     @Transactional
-    public ChatRoom createRoom(Member memberA, Member memberB) {
-        ChatRoom room = ChatRoom.create(memberA, memberB);
+    public ChatRoom createRoom(Member memberA, Member memberB, Match match) {
+        ChatRoom room = ChatRoom.create(memberA, memberB, match);
         return chatRoomRepository.save(room);
     }
 

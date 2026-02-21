@@ -21,7 +21,8 @@ public class MatchController {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다. id=" + memberId));
 
-        MatchResult matchResult = matchService.requestMatch(member);
+        matchService.requestMatch(member);
+        MatchResult matchResult = matchService.tryMatching(member);
         return ResponseEntity.ok(matchResult);
     }
 

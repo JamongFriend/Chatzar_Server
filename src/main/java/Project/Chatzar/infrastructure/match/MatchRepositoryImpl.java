@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -14,8 +15,8 @@ public class MatchRepositoryImpl implements MatchRepository {
 
 
     @Override
-    public List<Match> findByMemberAIdOrMemberBId(Long memberAId, Long memberBId) {
-        return matchJpaRepository.findByMemberAIdOrMemberBId(memberAId, memberBId);
+    public Optional<Match> findExactMatch(Long memberAId, Long memberBId) {
+        return matchJpaRepository.findExactMatch(memberAId, memberBId);
     }
 
     @Override

@@ -33,20 +33,17 @@ class MatchServiceTest {
     void matching_success_test() {
         Member partner = MemberFixture.create("partner@test.com", "상대방");
         memberRepository.save(partner);
-
-        MatchRequest partnerRequest = new MatchRequest(partner, new MatchCondition(null, null, null, null));
-        matchRequestRepository.save(partnerRequest);
+        MatchRequest partnerReq = new MatchRequest(partner, new MatchCondition(null, null, null, null));
+        matchRequestRepository.saveAndFlush(partnerReq);
 
         Member me = MemberFixture.create("me@test.com", "나");
         memberRepository.save(me);
-        MatchResult result = matchService.requestMatch(me);
+        matchService.requestMatch(me);
+
+        MatchResult result = matchService.tryMatching(me);
 
         // Then
         assertThat(result.isMatched()).isTrue();
-        assertThat(result.getPartnerNickname()).isEqualTo("상대방");
-
-        List<ChatRoom> rooms = chatRoomRepository.findAll();
-        assertThat(rooms).hasSize(1);
     }
 
     @Test

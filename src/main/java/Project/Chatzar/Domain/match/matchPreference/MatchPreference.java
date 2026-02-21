@@ -10,9 +10,8 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 public class MatchPreference {
-
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "match_preference_id")
     private Long id;
 

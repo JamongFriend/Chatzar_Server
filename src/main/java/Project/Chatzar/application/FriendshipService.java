@@ -17,6 +17,6 @@ public class FriendshipService {
         Friendship friendship = friendshipRepository.findById(friendshipId).orElseThrow();
         friendship.acceptRequset();
 
-        chatRoomService.unlockRelatedChatRoom(friendship.getRequester(), friendship.getReceiver());
+        chatRoomService.unlockRelatedChatRoom(friendship.getMemberA(), friendship.getMemberB());
     }
 }

@@ -1,5 +1,6 @@
 package Project.Chatzar.Domain.chatRoom;
 
+import Project.Chatzar.Domain.match.Match;
 import Project.Chatzar.Domain.member.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -30,11 +31,16 @@ public class ChatRoom {
     @Enumerated(EnumType.STRING)
     private ChatRoomType type;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "match_id")
+    private Match match;
+
     // 방 생성용 팩토리 메서드
-    public static ChatRoom create(Member memberA, Member memberB) {
+    public static ChatRoom create(Member memberA, Member memberB, Match match) {
         ChatRoom room = new ChatRoom();
         room.memberA = memberA;
         room.memberB = memberB;
+        room.match = match;
         room.status = ChatRoomStatus.MATCHED;
         room.type = ChatRoomType.RANDOM;
         room.createdAt = LocalDateTime.now();

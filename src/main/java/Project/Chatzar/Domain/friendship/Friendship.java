@@ -13,18 +13,20 @@ public class Friendship {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member requester;
+    @JoinColumn(name = "member_a_id")
+    private Member memberA;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member receiver;
+    @JoinColumn(name = "member_b_id")
+    private Member memberB;
 
     @Enumerated(EnumType.STRING)
     private FriendshipStatus status;
 
-    public Friendship(Long id, Member requester, Member receiver, FriendshipStatus status) {
+    public Friendship(Long id, Member memberA, Member memberB, FriendshipStatus status) {
         this.id = id;
-        this.requester = requester;
-        this.receiver = receiver;
+        this.memberA = memberA;
+        this.memberB = memberB;
         this.status = status;
     }
 
@@ -33,4 +35,6 @@ public class Friendship {
             this.status = FriendshipStatus.ACCEPTED;
         }
     }
+
+    protected Friendship() {}
 }
