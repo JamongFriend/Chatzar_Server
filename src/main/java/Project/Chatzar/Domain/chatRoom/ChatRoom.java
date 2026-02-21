@@ -60,10 +60,9 @@ public class ChatRoom {
         }
     }
 
-    public boolean isParticipant(Member member) {
-        Long id = member.getId();
-        return (memberA != null && memberA.getId().equals(id))
-                || (memberB != null && memberB.getId().equals(id));
+    public boolean isParticipant(Long memberId) {
+        return (memberA != null && memberA.getId().equals(memberId))
+                || (memberB != null && memberB.getId().equals(memberId));
     }
 
     public Long getOtherMemberId(Long memberId) {

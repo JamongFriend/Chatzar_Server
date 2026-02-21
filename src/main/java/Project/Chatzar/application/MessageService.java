@@ -32,7 +32,7 @@ public class MessageService {
         Member sender = memberRepository.findById(senderId)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 없습니다. senderId=" + senderId));
 
-        if (!room.isParticipant(sender)) {
+        if (!room.isParticipant(senderId)) {
             throw new IllegalStateException("채팅방 참여자가 아닙니다.");
         }
 

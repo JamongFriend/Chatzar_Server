@@ -2,7 +2,6 @@ package Project.Chatzar.application;
 
 import Project.Chatzar.Domain.friendship.Friendship;
 import Project.Chatzar.Domain.friendship.FriendshipRepository;
-import Project.Chatzar.Domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,14 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class FriendshipService {
     private final FriendshipRepository friendshipRepository;
-    private final MemberRepository memberRepository;
+    private final ChatRoomService chatRoomService;
 
     public void acceptFriendRequest(Long friendshipId) {
         Friendship friendship = friendshipRepository.findById(friendshipId).orElseThrow();
         friendship.acceptRequset();
 
-        unlockRelatedChatRoom(friendship.getRequester(), friendship.getReceiver());
+        chatRoomService.unlockRelatedChatRoom(friendship.getRequester(), friendship.getReceiver());
     }
-
-
 }

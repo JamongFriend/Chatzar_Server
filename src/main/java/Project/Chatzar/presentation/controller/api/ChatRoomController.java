@@ -43,7 +43,7 @@ public class ChatRoomController {
 
         ChatRoom room = chatRoomService.getRoom(roomId);
 
-        if (!room.isParticipant(me)) {
+        if (!room.isParticipant(memberId)) {
             throw new IllegalArgumentException("채팅방 참가자가 아닙니다.");
         }
 
@@ -75,7 +75,7 @@ public class ChatRoomController {
                                            @PathVariable Long roomId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다. id=" + memberId));
-        chatRoomService.deleteRoom(roomId, member);
+        chatRoomService.deleteRoom(roomId, memberId);
         return ResponseEntity.noContent().build();
     }
 

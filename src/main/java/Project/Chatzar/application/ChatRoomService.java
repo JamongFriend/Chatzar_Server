@@ -35,16 +35,16 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public void closeRandomChatRoom(Long roomId, Member member) {
+    public void closeRandomChatRoom(Long roomId, Long memberId) {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방입니다. id = " + roomId));
 
         if(chatRoom.getType() == ChatRoomType.RANDOM) {
-            Long partnerId = chatRoom.getOtherMemberId(member.getId());
-            boolean isFriend = friendshipRepository.existsByMemberIdAndFriendId(member.getId(), partnerId);
+            Long partnerId = chatRoom.getOtherMemberId(memberId);
+            boolean isFriend = friendshipRepository.existsByMemberIdAndFriendId(memberId, partnerId);
 
             if(partnerId == null){
-                this.deleteRoom(roomId, member);
+                this.deleteRoom(roomId, memberId);
                 return;
             }
 
@@ -57,11 +57,11 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public void deleteRoom(Long roomId, Member member) {
+    public void deleteRoom(Long roomId, Long memberId) {
         ChatRoom room = chatRoomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방입니다. id = " + roomId));
 
-        if(!room.isParticipant(member)){
+        if(!room.isParticipant(memberId)){
             throw new IllegalArgumentException("채팅방 참가자가 아닙니다.");
         }
         room.deleteRoom();
