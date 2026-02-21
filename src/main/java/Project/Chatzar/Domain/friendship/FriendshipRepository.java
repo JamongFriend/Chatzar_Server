@@ -1,9 +1,16 @@
 package Project.Chatzar.Domain.friendship;
 
+import Project.Chatzar.Domain.member.Member;
+
+import java.util.List;
 import java.util.Optional;
 
 public interface FriendshipRepository {
     Optional<Friendship> findById(Long friendshipId);
 
-    boolean existsByMemberIdAndFriendId(Long memberId, Long partnerId);
+    boolean existsByMemberIdAndFriendId(Long memberId, Long targetId);
+
+    Friendship save(Friendship friendship);
+
+    List<Friendship> findByMemberBAndStatus(Member memberB, FriendshipStatus status);
 }

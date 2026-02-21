@@ -23,8 +23,7 @@ public class Friendship {
     @Enumerated(EnumType.STRING)
     private FriendshipStatus status;
 
-    public Friendship(Long id, Member memberA, Member memberB, FriendshipStatus status) {
-        this.id = id;
+    public Friendship(Member memberA, Member memberB, FriendshipStatus status) {
         this.memberA = memberA;
         this.memberB = memberB;
         this.status = status;
