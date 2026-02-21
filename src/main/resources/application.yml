@@ -3,7 +3,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/chatzar?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: chatzar
-    password: 방금바꾼비밀번호
+    password: 83492761
     jpa:
       hibernate:
         ddl-auto: update
