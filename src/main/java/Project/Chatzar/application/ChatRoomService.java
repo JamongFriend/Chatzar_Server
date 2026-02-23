@@ -1,8 +1,10 @@
 package Project.Chatzar.application;
 
 import Project.Chatzar.Domain.chatRoom.ChatRoom;
+import Project.Chatzar.Domain.chatRoom.ChatRoomStatus;
 import Project.Chatzar.Domain.chatRoom.ChatRoomType;
 import Project.Chatzar.Domain.friendship.FriendshipRepository;
+import Project.Chatzar.Domain.friendship.FriendshipStatus;
 import Project.Chatzar.Domain.match.Match;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.chatRoom.ChatRoomRepository;
@@ -40,20 +42,17 @@ public class ChatRoomService {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방입니다. id = " + roomId));
 
-        if(chatRoom.getType() == ChatRoomType.RANDOM) {
-            Long partnerId = chatRoom.getOtherMemberId(memberId);
-            boolean isFriend = friendshipRepository.existsByMemberIdAndFriendId(memberId, partnerId);
+        if (!chatRoom.getMemberA().getId().equals(memberId) && !chatRoom.getMemberB().getId().equals(memberId)) {
+            throw new IllegalStateException("해당 채팅방을 종료할 권한이 없습니다.");
+        }
 
-            if(partnerId == null){
-                this.deleteRoom(roomId, memberId);
-                return;
-            }
+        boolean isFriend = friendshipRepository.existsByMemberAAndMemberBAndStatus(chatRoom.getMemberA(), chatRoom.getMemberB(), FriendshipStatus.ACCEPTED)
+                || friendshipRepository.existsByMemberAAndMemberBAndStatus(chatRoom.getMemberB(), chatRoom.getMemberA(), FriendshipStatus.ACCEPTED);
 
-            if(!isFriend) {
-                chatRoom.lock();
-            }else {
-                chatRoom.unlock();
-            }
+        if (!isFriend) {
+            chatRoom.lock();
+        } else {
+            chatRoom.close();
         }
     }
 

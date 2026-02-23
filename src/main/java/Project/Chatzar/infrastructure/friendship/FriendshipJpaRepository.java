@@ -20,4 +20,6 @@ public interface FriendshipJpaRepository extends JpaRepository<Friendship, Long>
     Friendship save(Friendship friendship);
 
     List<Friendship> findByMemberBAndStatus(Member memberB, FriendshipStatus status);
+
+    boolean existsByMemberAAndMemberBAndStatus(Member memberA, Member memberB, FriendshipStatus status);
 }

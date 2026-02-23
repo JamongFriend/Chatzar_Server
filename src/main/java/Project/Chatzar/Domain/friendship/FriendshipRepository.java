@@ -13,4 +13,6 @@ public interface FriendshipRepository {
     Friendship save(Friendship friendship);
 
     List<Friendship> findByMemberBAndStatus(Member memberB, FriendshipStatus status);
+
+    boolean existsByMemberAAndMemberBAndStatus(Member memberA, Member memberB, FriendshipStatus status);
 }

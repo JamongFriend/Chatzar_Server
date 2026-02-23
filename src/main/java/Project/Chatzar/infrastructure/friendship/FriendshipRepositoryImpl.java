@@ -34,4 +34,10 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
     public List<Friendship> findByMemberBAndStatus(Member memberB, FriendshipStatus status) {
         return friendshipJpaRepository.findByMemberBAndStatus(memberB, status);
     }
+
+    @Override
+    public boolean existsByMemberAAndMemberBAndStatus(Member memberA, Member memberB, FriendshipStatus status) {
+        return friendshipJpaRepository.existsByMemberAAndMemberBAndStatus(memberA, memberB, status);
+    }
+
 }

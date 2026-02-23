@@ -66,6 +66,10 @@ public class ChatRoom {
         }
     }
 
+    public void close() {
+        this.status = ChatRoomStatus.CLOSED;
+    }
+
     public boolean isParticipant(Long memberId) {
         return (memberA != null && memberA.getId().equals(memberId))
                 || (memberB != null && memberB.getId().equals(memberId));
