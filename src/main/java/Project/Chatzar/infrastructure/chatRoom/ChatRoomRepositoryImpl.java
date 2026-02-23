@@ -47,7 +47,8 @@ public class ChatRoomRepositoryImpl implements ChatRoomRepository {
     @Override
     public Optional<ChatRoom> findLockRoomBetweenMembers(Member m1, Member m2) {
         String jpql = "SELECT cr FROM ChatRoom cr " +
-                "WHERE ((cr.userA =:m1 AND cr.userB =:m2) OR (cr.userA = :m2 AND cr.userB = :m1))" +
+                "WHERE ((cr.memberA = :m1 AND cr.memberB = :m2) OR " +
+                "(cr.memberA = :m2 AND cr.memberB = :m1)) " +
                 "AND cr.status = :status";
         try {
             ChatRoom result = em.createQuery(jpql, ChatRoom.class)

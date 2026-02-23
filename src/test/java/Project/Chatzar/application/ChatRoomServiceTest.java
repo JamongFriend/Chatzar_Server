@@ -3,7 +3,6 @@ package Project.Chatzar.application;
 import Project.Chatzar.Domain.chatRoom.ChatRoom;
 import Project.Chatzar.Domain.chatRoom.ChatRoomRepository;
 import Project.Chatzar.Domain.chatRoom.ChatRoomStatus;
-import Project.Chatzar.Domain.friendship.FriendshipRepository;
 import Project.Chatzar.Domain.match.Match;
 import Project.Chatzar.Domain.match.MatchRepository;
 import Project.Chatzar.Domain.member.Member;
