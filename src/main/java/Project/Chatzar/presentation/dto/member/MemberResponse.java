@@ -14,7 +14,7 @@ public class MemberResponse {
     private String name;
     private String email;
     private String nickname;
-    private String age;
+    private Long age;
     private MemberStatus status;
 
     public static MemberResponse fromEntity(Member member) {

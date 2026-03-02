@@ -10,7 +10,7 @@ public class MemberFixture {
                 email,
                 "password123!",
                 nickname,
-                "27",
+                27L,
                 MemberStatus.ACTIVE
         );
     }
