@@ -8,6 +8,5 @@ public record SignUpRequest(
         @Email @NotBlank String email,
         @NotBlank String password,
         @NotBlank String nickname,
-        @NotBlank String age
-
+        @NotBlank Long age
 ) {}

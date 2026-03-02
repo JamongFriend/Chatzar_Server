@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 @Transactional(readOnly = true)
 public class AuthService {
     private final MemberRepository memberRepository;
-    private final RefreshTokenRepository repository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtProperties jwtProperties;
@@ -60,11 +60,11 @@ public class AuthService {
         String access = jwtTokenProvider.createAccessToken(member.getId(), member.getEmail());
         String refresh = jwtTokenProvider.createRefreshToken(member.getId(), member.getEmail());
 
-        String refreshHash = passwordEncoder.encode(refresh);
+        String refreshHash = refresh;
         LocalDateTime expiresAt = LocalDateTime.now().plusDays(jwtProperties.refreshTokenExpDays());
 
-        repository.deleteByMemberId(member.getId());
-        repository.save(new RefreshToken(member.getId(), refreshHash, expiresAt));
+        refreshTokenRepository.deleteByMemberId(member.getId());
+        refreshTokenRepository.save(new RefreshToken(member.getId(), refreshHash, expiresAt));
 
         return TokenResponse.builder()
                 .accessToken(access)
@@ -81,21 +81,19 @@ public class AuthService {
         Long memberId = jwtTokenProvider.getMemberId(request.refreshToken());
         String email = jwtTokenProvider.getEmail(request.refreshToken());
 
-        RefreshToken saved = repository.findValidByMemberId(memberId)
+        RefreshToken saved = refreshTokenRepository.findValidByMemberId(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("저장된 RefreshToken이 없거나 만료되었습니다."));
 
         // 저장된 해시와 비교
-        if (!passwordEncoder.matches(request.refreshToken(), saved.getRefreshTokenHash())) {
+        if (!request.refreshToken().equals(saved.getRefreshTokenHash())) {
             throw new IllegalArgumentException("RefreshToken이 일치하지 않습니다.");
         }
 
         String newAccess = jwtTokenProvider.createAccessToken(memberId, email);
         String newRefresh = jwtTokenProvider.createRefreshToken(memberId, email);
 
-        saved.revoke(); // 이전 토큰 폐기(선택)
-
         LocalDateTime newExpiresAt = LocalDateTime.now().plusDays(jwtProperties.refreshTokenExpDays());
-        repository.save(new RefreshToken(memberId, passwordEncoder.encode(newRefresh), newExpiresAt));
+        saved.updateToken(newRefresh, newExpiresAt);
 
         return TokenResponse.builder()
                 .accessToken(newAccess)
@@ -105,6 +103,6 @@ public class AuthService {
 
     @Transactional
     public void logout(Long memberId) {
-        repository.deleteByMemberId(memberId);
+        refreshTokenRepository.deleteByMemberId(memberId);
     }
 }

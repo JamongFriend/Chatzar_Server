@@ -37,6 +37,12 @@ public class RefreshToken {
         this.revoked = false;
     }
 
+    public void updateToken(String newHash, LocalDateTime expiresAt) {
+        this.refreshTokenHash = newHash;
+        this.expiresAt = expiresAt;
+        this.revoked = false;
+    }
+
     public void revoke() {
         this.revoked = true;
     }
