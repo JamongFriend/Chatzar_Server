@@ -14,4 +14,9 @@ public class ChatEventRepositoryImpl implements ChatEventRepository {
     public ChatEvent save(ChatEvent chatEvent) {
         return chatEventJpaRepository.save(chatEvent);
     }
+
+    @Override
+    public Long count() {
+        return chatEventJpaRepository.count();
+    }
 }

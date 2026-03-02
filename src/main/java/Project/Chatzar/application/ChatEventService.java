@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class ChatEventService {
-
     private final ChatEventRepository chatEventRepository;
     private final ChatRoomRepository chatRoomRepository;
     private final MemberRepository memberRepository;
