@@ -1,13 +1,12 @@
 package Project.Chatzar.application;
 
-import Project.Chatzar.Domain.auth.JwtTokenProvider;
+import Project.Chatzar.Domain.auth.RefreshToken;
 import Project.Chatzar.Domain.auth.RefreshTokenRepository;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.member.MemberRepository;
 import Project.Chatzar.Domain.member.MemberStatus;
 import Project.Chatzar.presentation.dto.auth.request.LoginRequest;
 import Project.Chatzar.presentation.dto.auth.request.ReissueRequest;
-import Project.Chatzar.presentation.dto.auth.request.SignUpRequest;
 import Project.Chatzar.presentation.dto.auth.response.TokenResponse;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,10 +27,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 public class AuthServiceReissueTest {
     @Autowired private AuthService authService;
     @Autowired private MemberRepository memberRepository;
-    @Autowired private JwtTokenProvider jwtTokenProvider;
-    @Autowired private RefreshTokenRepository refreshTokenRepository;
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private EntityManager em;
+    @Autowired private RefreshTokenRepository refreshTokenRepository;
 
     private String validRefreshToken;
 
@@ -76,5 +74,22 @@ public class AuthServiceReissueTest {
         assertThatThrownBy(() -> authService.reissue(new ReissueRequest(firstRefreshToken)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("RefreshToken이 일치하지 않습니다.");
+    }
+
+    @Test
+    @DisplayName("DB상에서 만료된 토큰으로 재발급 시도 시 예외 발생")
+    void reissue_fail_db_expired() {
+        Member member = memberRepository.findByEmail("reissue@test.com").orElseThrow();
+
+        RefreshToken savedToken = refreshTokenRepository.findValidByMemberId(member.getId())
+                .orElseThrow();
+        savedToken.updateToken(savedToken.getRefreshTokenHash(), java.time.LocalDateTime.now().minusHours(1));
+
+        em.flush();
+        em.clear();
+
+        assertThatThrownBy(() -> authService.reissue(new ReissueRequest(validRefreshToken)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("저장된 RefreshToken이 없거나 만료되었습니다.");
     }
 }
