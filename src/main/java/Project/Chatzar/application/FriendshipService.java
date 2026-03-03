@@ -59,7 +59,7 @@ public class FriendshipService {
     }
 
     @Transactional(readOnly = true)
-    public List<FriendListResponse> getFriendsList(Long memberId) {
+    public List<FriendListResponse> getFriendList(Long memberId) {
         return friendshipRepository.findAllFriends(memberId).stream()
                 .map(f -> {
                     Member friend = f.getMemberA().getId().equals(memberId)

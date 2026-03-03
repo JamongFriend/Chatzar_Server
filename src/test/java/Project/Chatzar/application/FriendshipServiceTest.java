@@ -3,6 +3,7 @@ package Project.Chatzar.application;
 import Project.Chatzar.Domain.chatRoom.ChatRoomRepository;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.member.MemberRepository;
+import Project.Chatzar.presentation.dto.friendship.FriendListResponse;
 import Project.Chatzar.presentation.dto.friendship.FriendshipResponse;
 import Project.Chatzar.testfixture.MemberFixture;
 import org.junit.jupiter.api.DisplayName;
@@ -57,4 +58,33 @@ class FriendshipServiceTest {
         });
     }
 
+    @Test
+    @DisplayName("수락된 친구 목록만 정확하게 조회되는지 테스트")
+    void getFriendList_Success() {
+        Member me = memberRepository.save(MemberFixture.create("me@test.com", "나"));
+        Member friendA = memberRepository.save(MemberFixture.create("friendA@test.com", "친구A"));
+        Member friendB = memberRepository.save(MemberFixture.create("friendB@test.com", "친구B"));
+        Member stranger = memberRepository.save(MemberFixture.create("stranger@test.com", "모르는사람"));
+
+        friendshipService.sendFriendRequest(me, friendA.getId());
+        Long id1 = friendshipService.getPendingRequests(friendA).get(0).friendshipId();
+        friendshipService.acceptFriendRequest(id1, friendA);
+
+        friendshipService.sendFriendRequest(friendB, me.getId());
+        Long id2 = friendshipService.getPendingRequests(me).get(0).friendshipId();
+        friendshipService.acceptFriendRequest(id2, me);
+
+        List<FriendListResponse> friendList = friendshipService.getFriendList(me.getId());
+
+        org.assertj.core.api.Assertions.assertThat(friendList).hasSize(2);
+
+        org.assertj.core.api.Assertions.assertThat(friendList)
+                .extracting(FriendListResponse::nickname)
+                .containsExactlyInAnyOrder("친구A", "친구B")
+                .doesNotContain("모르는사람");
+
+        org.assertj.core.api.Assertions.assertThat(friendList)
+                .extracting(FriendListResponse::friendId)
+                .containsExactlyInAnyOrder(friendA.getId(), friendB.getId());
+    }
 }
