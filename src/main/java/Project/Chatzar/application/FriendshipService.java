@@ -5,6 +5,7 @@ import Project.Chatzar.Domain.friendship.FriendshipRepository;
 import Project.Chatzar.Domain.friendship.FriendshipStatus;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.member.MemberRepository;
+import Project.Chatzar.presentation.dto.friendship.FriendListResponse;
 import Project.Chatzar.presentation.dto.friendship.FriendshipResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -55,5 +56,16 @@ public class FriendshipService {
                         f.getStatus().name()
                 ))
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<FriendListResponse> getFriendsList(Long memberId) {
+        return friendshipRepository.findAllFriends(memberId).stream()
+                .map(f -> {
+                    Member friend = f.getMemberA().getId().equals(memberId)
+                            ? f.getMemberB()
+                            : f.getMemberA();
+                    return FriendListResponse.of(f.getId(), friend);
+                }).toList();
     }
 }

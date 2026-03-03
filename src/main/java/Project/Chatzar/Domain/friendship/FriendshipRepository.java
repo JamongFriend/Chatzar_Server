@@ -8,6 +8,8 @@ import java.util.Optional;
 public interface FriendshipRepository {
     Optional<Friendship> findById(Long friendshipId);
 
+    List<Friendship> findAllFriends(Long memberId);
+
     boolean existsByMemberIdAndFriendId(Long memberId, Long targetId);
 
     Friendship save(Friendship friendship);

@@ -17,6 +17,13 @@ public interface FriendshipJpaRepository extends JpaRepository<Friendship, Long>
             "(f.memberA.id = :pId AND f.memberB.id = :mId)")
     boolean existsByMemberIdAndFriendId(@Param("mId") Long memberId, @Param("pId") Long targetId);
 
+    @Query("SELECT f FROM Friendship f " +
+            "JOIN FETCH f.memberA " +
+            "JOIN FETCH f.memberB " +
+            "WHERE (f.memberA.id = :memberId OR f.memberB.id = :memberId) " +
+            "AND f.status = 'ACCEPTED'")
+    List<Friendship> findAllFriends(@Param("memberId") Long memberId);
+
     Friendship save(Friendship friendship);
 
     List<Friendship> findByMemberBAndStatus(Member memberB, FriendshipStatus status);

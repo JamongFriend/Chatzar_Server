@@ -21,6 +21,11 @@ public class FriendshipRepositoryImpl implements FriendshipRepository {
     }
 
     @Override
+    public List<Friendship> findAllFriends(Long memberId) {
+        return  friendshipJpaRepository.findAllFriends(memberId);
+    }
+
+    @Override
     public boolean existsByMemberIdAndFriendId(Long memberId, Long targetId) {
         return friendshipJpaRepository.existsByMemberIdAndFriendId(memberId, targetId);
     }
