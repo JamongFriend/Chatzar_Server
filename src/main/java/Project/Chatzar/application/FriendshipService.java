@@ -25,6 +25,10 @@ public class FriendshipService {
         Member targetMember = memberRepository.findById(targetId)
                 .orElseThrow(() -> new IllegalArgumentException("대상을 찾을 수 없습니다."));
 
+        if (requester.getId().equals(targetId)) {
+            throw new IllegalArgumentException("자기 자신에게 친구 요청을 보낼 수 없습니다.");
+        }
+
         if (friendshipRepository.existsByMemberIdAndFriendId(requester.getId(), targetId)) {
             throw new IllegalStateException("이미 친구이거나 대기 중인 요청이 있습니다.");
         }

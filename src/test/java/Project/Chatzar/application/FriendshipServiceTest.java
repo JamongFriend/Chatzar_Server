@@ -1,6 +1,5 @@
 package Project.Chatzar.application;
 
-import Project.Chatzar.Domain.chatRoom.ChatRoomRepository;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.member.MemberRepository;
 import Project.Chatzar.presentation.dto.friendship.FriendListResponse;
@@ -13,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -87,4 +88,27 @@ class FriendshipServiceTest {
                 .extracting(FriendListResponse::friendId)
                 .containsExactlyInAnyOrder(friendA.getId(), friendB.getId());
     }
+
+    @Test
+    @DisplayName("이미 친구 요청을 보낸 상대에게 중복으로 요청을 보내면 예외가 발생한다")
+    void sendFriendRequest_Duplicate_ThrowsException() {
+        Member memberA = memberRepository.save(MemberFixture.create("A@test.com", "A"));
+        Member memberB = memberRepository.save(MemberFixture.create("B@test.com", "B"));
+        friendshipService.sendFriendRequest(memberA, memberB.getId());
+
+        assertThatThrownBy(() -> friendshipService.sendFriendRequest(memberA, memberB.getId()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("이미 친구이거나 대기 중인 요청이 있습니다.");
+    }
+
+    @Test
+    @DisplayName("자기 자신에게 친구 요청을 보내면 예외가 발생한다")
+    void sendFriendRequest_Self_ThrowsException() {
+        Member me = memberRepository.save(MemberFixture.create("me@test.com", "me"));
+
+        assertThatThrownBy(() -> friendshipService.sendFriendRequest(me, me.getId()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("자기 자신에게 친구 요청을 보낼 수 없습니다.");
+    }
+
 }
