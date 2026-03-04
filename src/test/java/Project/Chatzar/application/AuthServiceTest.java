@@ -1,12 +1,12 @@
 package Project.Chatzar.application;
 
-import Project.Chatzar.Domain.auth.RefreshToken;
+import Project.Chatzar.Domain.auth.RefreshTokenRepository;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.member.MemberRepository;
+import Project.Chatzar.Domain.member.MemberStatus;
 import Project.Chatzar.presentation.dto.auth.request.LoginRequest;
-import Project.Chatzar.presentation.dto.auth.request.ReissueRequest;
 import Project.Chatzar.presentation.dto.auth.request.SignUpRequest;
-import Project.Chatzar.presentation.dto.auth.response.TokenResponse;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +25,8 @@ class AuthServiceTest {
     @Autowired private AuthService authService;
     @Autowired private MemberRepository memberRepository;
     @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private RefreshTokenRepository refreshTokenRepository;
+    @Autowired EntityManager em;
 
     @Test
     @DisplayName("회원가입 시 비밀번호가 암호화되는지 테스트")
@@ -56,5 +58,36 @@ class AuthServiceTest {
 
         assertThatThrownBy(() -> authService.login(new LoginRequest("wrong_pw_test@test.com", "wrong_password")))
                 .hasMessage("이메일 또는 비밀번호가 올바르지 않습니다.");
+    }
+
+    @Test
+    @DisplayName("정상적으로 로그아웃이 되는지 테스트")
+    void logout_success() {
+        String email = "logout@test.com";
+        String rawPassword = "password123!";
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+
+        Member member = new Member(
+                "테스트유저",
+                email,
+                encodedPassword, // 암호화된 비밀번호 주입
+                "테스트닉네임",
+                27L,
+                MemberStatus.ACTIVE
+        );
+        memberRepository.save(member);
+
+        em.flush();
+        em.clear();
+
+        LoginRequest loginRequest = new LoginRequest(email, rawPassword);
+        authService.login(loginRequest);
+        authService.logout(member.getId());
+
+        em.flush();
+        em.clear();
+
+        boolean exists = refreshTokenRepository.findValidByMemberId(member.getId()).isPresent();
+        assertThat(exists).isFalse();
     }
 }

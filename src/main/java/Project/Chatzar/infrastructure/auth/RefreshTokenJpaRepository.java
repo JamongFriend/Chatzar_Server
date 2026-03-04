@@ -2,6 +2,9 @@ package Project.Chatzar.infrastructure.auth;
 
 import Project.Chatzar.Domain.auth.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -10,5 +13,7 @@ public interface RefreshTokenJpaRepository  extends JpaRepository<RefreshToken, 
 
     RefreshToken save(RefreshToken token);
 
-    void deleteByMemberId(Long memberId);
+    @Modifying
+    @Query("DELETE FROM RefreshToken r WHERE r.memberId = :memberId")
+    void deleteByMemberId(@Param("memberId") Long memberId);
 }

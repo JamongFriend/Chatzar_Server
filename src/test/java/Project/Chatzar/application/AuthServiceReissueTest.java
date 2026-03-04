@@ -92,4 +92,19 @@ public class AuthServiceReissueTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("저장된 RefreshToken이 없거나 만료되었습니다.");
     }
+
+    @Test
+    @DisplayName("로그아웃 성공 후 해당 토큰으로 재발급 시도 시 예외 발생")
+    void logout_success_and_reissue_fail() {
+        Member member = memberRepository.findByEmail("reissue@test.com").orElseThrow();
+
+        authService.logout(member.getId());
+
+        em.flush();
+        em.clear();
+
+        assertThatThrownBy(() -> authService.reissue(new ReissueRequest(validRefreshToken)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("저장된 RefreshToken이 없거나 만료되었습니다.");
+    }
 }
