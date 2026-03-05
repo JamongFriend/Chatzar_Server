@@ -27,8 +27,8 @@ class ChatEventServiceTest {
     @Test
     @DisplayName("채팅방 입장 로그가 정상적으로 저장되는지 테스트")
     void logJoin_success() {
-        Member memberA = memberRepository.save(new Member("A", "a@test.com", "123", "nickA", 20L, MemberStatus.ACTIVE));
-        Member memberB = memberRepository.save(new Member("B", "b@test.com", "123", "nickB", 20L, MemberStatus.ACTIVE));
+        Member memberA = memberRepository.save(new Member("A", "a@test.com", "123", "nickA", "1234", 20L, MemberStatus.ACTIVE));
+        Member memberB = memberRepository.save(new Member("B", "b@test.com", "123", "nickB", "2345", 20L, MemberStatus.ACTIVE));
 
         ChatRoom room = chatRoomRepository.save(ChatRoom.create(memberA, memberB, null));
 
@@ -40,8 +40,8 @@ class ChatEventServiceTest {
     @Test
     @DisplayName("존재하지 않는 회원 ID로 입장 로그를 남길 때 예외 발생")
     void logJoin_fail_memberNotFound() {
-        Member memberA = memberRepository.save(new Member("A", "a@test.com", "123", "nickA", 20L, MemberStatus.ACTIVE));
-        Member memberB = memberRepository.save(new Member("B", "b@test.com", "123", "nickB", 20L, MemberStatus.ACTIVE));
+        Member memberA = memberRepository.save(new Member("A", "a@test.com", "123", "nickA", "1234", 20L, MemberStatus.ACTIVE));
+        Member memberB = memberRepository.save(new Member("B", "b@test.com", "123", "nickB", "2345", 20L, MemberStatus.ACTIVE));
 
         ChatRoom room = chatRoomRepository.save(ChatRoom.create(memberA, memberB, null));
 
@@ -56,7 +56,7 @@ class ChatEventServiceTest {
     @DisplayName("존재하지 않는 채팅방 ID로 입장 로그를 남길 때 예외 발생")
     void logJoin_fail_roomNotFound() {
         // Given: 회원만 생성
-        Member member = memberRepository.save(new Member("테스터", "test@test.com", "123", "닉네임", 25L, MemberStatus.ACTIVE));
+        Member member = memberRepository.save(new Member("테스터", "test@test.com", "123", "닉네임", "1234", 25L, MemberStatus.ACTIVE));
 
         // 존재하지 않을 법한 채팅방 ID 설정
         Long invalidRoomId = 9999L;

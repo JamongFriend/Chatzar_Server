@@ -9,6 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Random;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -20,12 +22,14 @@ public class MemberService {
     public Long join(JoinRequest request) {
         validateDuplicateEmail(request.email());
 
+        String uniqueTag = generateUniqueTag(request.nickname());
 
         Member member = Member.createWithTag(
                 request.name(),
                 request.email(),
                 passwordEncoder.encode(request.password()),
                 request.nickname(),
+                uniqueTag,
                 request.age()
         );
 
@@ -38,4 +42,22 @@ public class MemberService {
         return MemberResponse.fromEntity(member);
     }
 
+    private String generateUniqueTag(String nickname) {
+        Random random = new Random();
+        String tag;
+
+        for (int i = 0; i < 10; i++) {
+            tag = String.format("%04d", random.nextInt(9999) + 1);
+            if (!memberRepository.existsByNicknameAndTag(nickname, tag)) {
+                return tag;
+            }
+        }
+        throw new IllegalStateException("다른 닉네임을 사용해주세요.");
+    }
+
+    private void validateDuplicateEmail(String email) {
+        if (memberRepository.findByEmail(email).isPresent()) {
+            throw new IllegalStateException("이미 존재하는 이메일입니다.");
+        }
+    }
 }

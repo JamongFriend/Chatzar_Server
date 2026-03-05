@@ -18,21 +18,6 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public boolean existsByEmail(String email) {
-        return memberJpaRepository.existsByEmail(email);
-    }
-
-    @Override
-    public Optional<Member> findByNickname(String nickname) {
-        return memberJpaRepository.findByNickname(nickname);
-    }
-
-    @Override
-    public boolean existsByNickname(String nickname) {
-        return memberJpaRepository.existsByNickname(nickname);
-    }
-
-    @Override
     public Member save(Member member) {
         return memberJpaRepository.save(member);
     }
@@ -41,4 +26,16 @@ public class MemberRepositoryImpl implements MemberRepository {
     public Optional<Member> findById(Long memberId) {
         return memberJpaRepository.findById(memberId);
     }
+
+    @Override
+    public Optional<Member> findByNicknameAndTag(String nickname, String tag) {
+        return memberJpaRepository.findByNicknameAndTag(nickname, tag);
+    }
+
+    @Override
+    public boolean existsByNicknameAndTag(String nickname, String tag) {
+        return memberJpaRepository.existsByNicknameAndTag(nickname, tag);
+    }
+
+
 }
