@@ -6,7 +6,9 @@ import Project.Chatzar.Domain.friendship.FriendshipStatus;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.member.MemberRepository;
 import Project.Chatzar.presentation.dto.friendship.FriendListResponse;
+import Project.Chatzar.presentation.dto.friendship.FriendSearchRequest;
 import Project.Chatzar.presentation.dto.friendship.FriendshipResponse;
+import Project.Chatzar.presentation.dto.member.MemberResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,12 +17,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class FriendshipService {
     private final FriendshipRepository friendshipRepository;
     private final MemberRepository memberRepository;
     private final ChatRoomService chatRoomService;
 
+    @Transactional
     public void sendFriendRequest(Member requester, Long targetId){
         Member targetMember = memberRepository.findById(targetId)
                 .orElseThrow(() -> new IllegalArgumentException("대상을 찾을 수 없습니다."));
@@ -37,6 +40,7 @@ public class FriendshipService {
         friendshipRepository.save(friendship);
     }
 
+    @Transactional
     public void acceptFriendRequest(Long friendshipId, Member currentMember) {
         Friendship friendship = friendshipRepository.findById(friendshipId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 친구 요청을 찾을 수 없습니다."));
@@ -50,7 +54,13 @@ public class FriendshipService {
         chatRoomService.unlockRelatedChatRoom(friendship.getMemberA(), friendship.getMemberB());
     }
 
-    @Transactional(readOnly = true)
+    public MemberResponse searchFriend(FriendSearchRequest request) {
+        Member target = memberRepository.findByNicknameAndTag(request.getNickname(), request.getTag())
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        return MemberResponse.fromEntity(target);
+    }
+
     public List<FriendshipResponse> getPendingRequests(Member member) {
         return friendshipRepository.findByMemberBAndStatus(member, FriendshipStatus.PENDING)
                 .stream()
@@ -62,7 +72,6 @@ public class FriendshipService {
                 .toList();
     }
 
-    @Transactional(readOnly = true)
     public List<FriendListResponse> getFriendList(Long memberId) {
         return friendshipRepository.findAllFriends(memberId).stream()
                 .map(f -> {

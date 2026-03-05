@@ -7,22 +7,22 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 
-@Getter
-@AllArgsConstructor
-public class MemberResponse {
-    private Long id;
-    private String name;
-    private String email;
-    private String nickname;
-    private Long age;
-    private MemberStatus status;
-
+public record MemberResponse(
+        Long id,
+        String name,
+        String email,
+        String nickname,
+        String tag,
+        Long age,
+        MemberStatus status
+) {
     public static MemberResponse fromEntity(Member member) {
         return new MemberResponse(
                 member.getId(),
                 member.getName(),
                 member.getEmail(),
                 member.getNickname(),
+                member.getTag(),
                 member.getAge(),
                 member.getStatus()
         );
