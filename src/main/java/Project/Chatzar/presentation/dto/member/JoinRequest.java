@@ -1,9 +1,9 @@
-package Project.Chatzar.presentation.dto.auth.request;
+package Project.Chatzar.presentation.dto.member;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public record SignUpRequest(
+public record JoinRequest(
         @NotBlank String name,
         @Email @NotBlank String email,
         @NotBlank String password,
