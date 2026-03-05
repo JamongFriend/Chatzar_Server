@@ -5,11 +5,9 @@ import Project.Chatzar.Domain.auth.RefreshToken;
 import Project.Chatzar.Domain.auth.RefreshTokenRepository;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.member.MemberRepository;
-import Project.Chatzar.Domain.member.MemberStatus;
 import Project.Chatzar.config.JwtProperties;
 import Project.Chatzar.presentation.dto.auth.request.LoginRequest;
 import Project.Chatzar.presentation.dto.auth.request.ReissueRequest;
-import Project.Chatzar.presentation.dto.auth.request.SignUpRequest;
 import Project.Chatzar.presentation.dto.auth.response.TokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,26 +25,6 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtProperties jwtProperties;
-
-    @Transactional
-    public Long signUp(SignUpRequest request) {
-        if(memberRepository.existsByEmail(request.email())){
-            throw new IllegalArgumentException("이미 사용 중인 이메일 입니다.");
-        }
-
-        if(memberRepository.existsByNickname(request.nickname())){
-            throw new IllegalArgumentException("이미 사용 중인 닉네임 입니다.");
-        }
-        Member member = new Member(
-                request.name(),
-                request.email(),
-                passwordEncoder.encode(request.password()),
-                request.nickname(),
-                request.age(),
-                MemberStatus.ACTIVE);
-
-        return memberRepository.save(member).getId();
-    }
 
     @Transactional
     public TokenResponse login(LoginRequest request) {
