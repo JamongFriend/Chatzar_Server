@@ -8,6 +8,7 @@ import Project.Chatzar.Domain.member.MemberStatus;
 import Project.Chatzar.presentation.dto.auth.request.LoginRequest;
 import Project.Chatzar.presentation.dto.auth.request.ReissueRequest;
 import Project.Chatzar.presentation.dto.auth.response.TokenResponse;
+import Project.Chatzar.testfixture.MemberFixture;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,15 +33,15 @@ public class AuthServiceReissueTest {
     @Autowired private RefreshTokenRepository refreshTokenRepository;
 
     private String validRefreshToken;
+    private final String testEmail = "reissue@test.com";
+    private final String testPassword = "password123!";
 
     @BeforeEach
     void setUp() {
-        memberRepository.save(new Member(
-                "이름", "reissue@test.com", passwordEncoder.encode("1234"),
-                "닉네임", 27L, MemberStatus.ACTIVE));
+        memberRepository.save(MemberFixture.create("reissue@test.com", "닉네임"));
         em.flush();
         em.clear();
-        TokenResponse res = authService.login(new LoginRequest("reissue@test.com", "1234"));
+        TokenResponse res = authService.login(new LoginRequest("reissue@test.com", "password123!"));
         validRefreshToken = res.refreshToken();
     }
 
@@ -58,12 +59,12 @@ public class AuthServiceReissueTest {
     @DisplayName("이미 사용되었거나 폐기(Revoke)된 토큰으로 재발급 시도 시 예외가 발생하는지 테스트")
     void reissue_fail_already_used() throws InterruptedException {
         String uniqueEmail = "fail_test_" + System.currentTimeMillis() + "@test.com";
-        Member member = new Member("테스터", uniqueEmail, passwordEncoder.encode("1234"), "테스터닉", 20L, MemberStatus.ACTIVE);
-        memberRepository.save(member);
+
+        Member member = memberRepository.save(MemberFixture.create(uniqueEmail, "테스터닉"));
         em.flush();
         em.clear();
 
-        TokenResponse loginRes = authService.login(new LoginRequest(uniqueEmail, "1234"));
+        TokenResponse loginRes = authService.login(new LoginRequest(uniqueEmail, "password123!"));
         String firstRefreshToken = loginRes.refreshToken();
         Thread.sleep(1000);
         authService.reissue(new ReissueRequest(firstRefreshToken));
@@ -79,7 +80,7 @@ public class AuthServiceReissueTest {
     @Test
     @DisplayName("DB상에서 만료된 토큰으로 재발급 시도 시 예외 발생")
     void reissue_fail_db_expired() {
-        Member member = memberRepository.findByEmail("reissue@test.com").orElseThrow();
+        Member member = memberRepository.findByEmail(testEmail).orElseThrow();
 
         RefreshToken savedToken = refreshTokenRepository.findValidByMemberId(member.getId())
                 .orElseThrow();
@@ -96,7 +97,7 @@ public class AuthServiceReissueTest {
     @Test
     @DisplayName("로그아웃 성공 후 해당 토큰으로 재발급 시도 시 예외 발생")
     void logout_success_and_reissue_fail() {
-        Member member = memberRepository.findByEmail("reissue@test.com").orElseThrow();
+        Member member = memberRepository.findByEmail(testEmail).orElseThrow();
 
         authService.logout(member.getId());
 
