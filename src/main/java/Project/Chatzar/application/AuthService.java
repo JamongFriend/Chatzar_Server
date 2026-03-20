@@ -45,6 +45,7 @@ public class AuthService {
         refreshTokenRepository.save(new RefreshToken(member.getId(), refreshHash, expiresAt));
 
         return TokenResponse.builder()
+                .memberId(member.getId())
                 .accessToken(access)
                 .refreshToken(refresh)
                 .build();
@@ -74,6 +75,7 @@ public class AuthService {
         saved.updateToken(newRefresh, newExpiresAt);
 
         return TokenResponse.builder()
+                .memberId(memberId)
                 .accessToken(newAccess)
                 .refreshToken(newRefresh)
                 .build();

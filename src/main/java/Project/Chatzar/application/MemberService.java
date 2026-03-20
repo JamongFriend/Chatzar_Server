@@ -3,6 +3,7 @@ package Project.Chatzar.application;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.presentation.dto.member.JoinRequest;
 import Project.Chatzar.presentation.dto.member.MemberResponse;
+import Project.Chatzar.presentation.dto.member.SignupResponse;
 import Project.Chatzar.Domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,7 +20,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Long join(JoinRequest request) {
+    public SignupResponse join(JoinRequest request) {
         validateDuplicateEmail(request.email());
 
         String uniqueTag = generateUniqueTag(request.nickname());
@@ -33,7 +34,13 @@ public class MemberService {
                 request.age()
         );
 
-        return memberRepository.save(member).getId();
+        memberRepository.save(member);
+        
+        return SignupResponse.builder()
+                .memberId(member.getId())
+                .email(member.getEmail())
+                .nickname(member.getNickname())
+                .build();
     }
 
     public MemberResponse getMember(Long memberId) {
