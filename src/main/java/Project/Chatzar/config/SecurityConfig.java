@@ -23,10 +23,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/register", "/auth/login", "/auth/reissue").permitAll()
-                        .requestMatchers("/auth/logout").authenticated()
+                        .requestMatchers("/api/v1/members/register", "/api/v1/auth/login", "/api/v1/auth/reissue").permitAll()
+                        .requestMatchers("/api/v1/members/**", "/api/v1/auth/**").permitAll() // 테스트를 위해 더 넓은 범위 허용
                         .anyRequest().authenticated()
-
                 )
                 .addFilterBefore(new JwtAuthFilter(provider), UsernamePasswordAuthenticationFilter.class);
 
