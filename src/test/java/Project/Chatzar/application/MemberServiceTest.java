@@ -27,8 +27,8 @@ class MemberServiceTest {
         JoinRequest user1 = new JoinRequest("사용자1", "user1@test.com", "pass123!", nickname, 27L);
         JoinRequest user2 = new JoinRequest("사용자2", "user2@test.com", "pass123!", nickname, 25L);
 
-        Long id1 = memberService.join(user1);
-        Long id2 = memberService.join(user2);
+        Long id1 = memberService.join(user1).memberId();
+        Long id2 = memberService.join(user2).memberId();
 
         Member member1 = memberRepository.findById(id1).orElseThrow();
         Member member2 = memberRepository.findById(id2).orElseThrow();
@@ -49,7 +49,7 @@ class MemberServiceTest {
     void signUp_success() {
         JoinRequest request = new JoinRequest("홍길동", "test@test.com", "password123", "길동이", 27L);
 
-        Long savedId = memberService.join(request);
+        Long savedId = memberService.join(request).memberId();
 
         Member member = memberRepository.findById(savedId).orElseThrow();
         assertThat(member.getEmail()).isEqualTo("test@test.com");
