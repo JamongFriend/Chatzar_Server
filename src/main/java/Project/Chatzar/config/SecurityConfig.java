@@ -25,6 +25,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/members/register", "/api/v1/auth/login", "/api/v1/auth/reissue").permitAll()
                         .requestMatchers("/api/v1/members/**", "/api/v1/auth/**").permitAll() // 테스트를 위해 더 넓은 범위 허용
+                        .requestMatchers("/ws/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthFilter(provider), UsernamePasswordAuthenticationFilter.class);
