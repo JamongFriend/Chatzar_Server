@@ -20,6 +20,11 @@ public class MatchRepositoryImpl implements MatchRepository {
     }
 
     @Override
+    public Optional<Match> findLatestMatch(Long memberId) {
+        return matchJpaRepository.findFirstByMemberA_IdOrMemberB_IdOrderByCreatedAtDesc(memberId, memberId);
+    }
+
+    @Override
     public Match save(Match match) {
         return matchJpaRepository.save(match);
     }

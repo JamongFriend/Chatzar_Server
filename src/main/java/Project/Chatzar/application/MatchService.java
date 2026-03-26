@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -36,12 +38,18 @@ public class MatchService {
                         });
     }
 
+    public MatchCondition getPreference(Member member) {
+        return matchPreferenceRepository.findByMember(member)
+                .map(MatchPreference::getCondition)
+                .orElse(new MatchCondition(null, null, null, null, null));
+    }
+
     // 매칭 요청 생성
     @Transactional
     public MatchResponse requestMatch(Member member) {
         MatchCondition matchCondition = matchPreferenceRepository.findByMember(member)
                 .map(MatchPreference::getCondition)
-                .orElse(new MatchCondition(null, null, null, null));
+                .orElse(new MatchCondition(null, null, null, null, null));
 
         MatchRequest myRequest = new MatchRequest(member, matchCondition);
         matchRequestRepository.saveAndFlush(myRequest);
@@ -67,11 +75,25 @@ public class MatchService {
         matchRequest.markCancelled();
     }
 
-    public MatchRequestStatus getMyMatchStatus(Member member) {
-        return matchRequestRepository
-                .findFirstByRequesterAndStatusOrderByCreatedAtDesc(member, MatchRequestStatus.WAITING)
-                .map(MatchRequest::getStatus)
-                .orElse(MatchRequestStatus.MATCHED);
+    @Transactional
+    public MatchResponse getMatchStatus(Member member) {
+        // 1. 대기 중인 요청이 있는지 확인
+        Optional<MatchRequest> waitingRequest = matchRequestRepository
+                .findFirstByRequesterAndStatusOrderByCreatedAtDesc(member, MatchRequestStatus.WAITING);
+
+        if (waitingRequest.isPresent()) {
+            return MatchResponse.waiting();
+        }
+
+        // 2. 대기 중인 요청이 없다면 최신 매칭 확인
+        return matchRepository.findLatestMatch(member.getId())
+                .map(match -> {
+                    ChatRoom chatRoom = chatRoomRepository.findByMatchId(match.getId());
+                    if (chatRoom == null) return MatchResponse.waiting();
+                    Member partner = match.getOtherMember(member);
+                    return MatchResponse.matched(match.getId(), chatRoom.getId(), partner);
+                })
+                .orElse(MatchResponse.waiting());
     }
 
     // 매칭 시도
@@ -80,12 +102,10 @@ public class MatchService {
         if (myRequest.getStatus() != MatchRequestStatus.WAITING) {
             return MatchResponse.waiting();
         }
-        // 나 자신이 아닌, WAITING 상태의 다른 요청 하나 찾기
         var optionalPartner = matchRequestRepository
                 .findFirstByRequesterNotAndStatusOrderByCreatedAtAsc(
                         myRequest.getRequester(), MatchRequestStatus.WAITING
                 );
-        // 상대가 없으면 → 나는 계속 WAITING 상태로 남음
         if (optionalPartner.isEmpty()) {
             return MatchResponse.waiting();
         }
@@ -94,11 +114,12 @@ public class MatchService {
 
         Member memberA = myRequest.getRequester();
         Member memberB = partnerRequest.getRequester();
+
         Match match = new Match(null, memberA, memberB);
-        matchRepository.save(match);
+        match = matchRepository.save(match);
 
         ChatRoom chatRoom = ChatRoom.create(memberA, memberB, match);
-        chatRoomRepository.save(chatRoom);
+        chatRoom = chatRoomRepository.save(chatRoom);
 
         myRequest.markMatched();
         partnerRequest.markMatched();

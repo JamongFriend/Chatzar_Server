@@ -36,11 +36,11 @@ public class MatchController {
     }
 
     @GetMapping("/status")
-    public ResponseEntity<String> status(@AuthenticationPrincipal Long memberId) {
+    public ResponseEntity<MatchResponse> status(@AuthenticationPrincipal Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다. id=" + memberId));
 
-        return ResponseEntity.ok(matchService.getMyMatchStatus(member).name());
+        return ResponseEntity.ok(matchService.getMatchStatus(member));
     }
 
 }

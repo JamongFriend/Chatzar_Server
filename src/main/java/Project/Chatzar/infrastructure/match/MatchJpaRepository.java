@@ -16,4 +16,6 @@ public interface MatchJpaRepository  extends JpaRepository<Match, Long> {
             "(m.memberA.id = :memberBId AND m.memberB.id = :memberAId)")
     Optional<Match> findExactMatch(@Param("memberAId") Long memberAId, @Param("memberBId") Long memberBId);
 
+    Optional<Match> findFirstByMemberA_IdOrMemberB_IdOrderByCreatedAtDesc(Long memberAId, Long memberBId);
+
 }

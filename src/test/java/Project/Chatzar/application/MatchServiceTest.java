@@ -30,7 +30,7 @@ class MatchServiceTest {
     void matching_success_test() {
         Member partner = MemberFixture.create("partner@test.com", "상대방");
         memberRepository.save(partner);
-        MatchRequest partnerReq = new MatchRequest(partner, new MatchCondition(null, null, null, null));
+        MatchRequest partnerReq = new MatchRequest(partner, new MatchCondition(null, null, null, null, null));
         matchRequestRepository.saveAndFlush(partnerReq);
 
         Member me = MemberFixture.create("me@test.com", "나");
@@ -78,5 +78,29 @@ class MatchServiceTest {
         var request = matchRequestRepository
                 .findFirstByRequesterAndStatusOrderByCreatedAtDesc(me, MatchRequestStatus.WAITING);
         assertThat(request.isEmpty()).isTrue();
+    }
+
+    @Test
+    @DisplayName("매칭 성공 후 매칭 상태를 조회하면 MATCHED 정보가 반환되어야 한다")
+    void get_match_status_test() {
+        // Given
+        Member partner = MemberFixture.create("partner@test.com", "상대방");
+        memberRepository.save(partner);
+        MatchRequest partnerReq = new MatchRequest(partner, new MatchCondition(null, null, null, null, null));
+        matchRequestRepository.saveAndFlush(partnerReq);
+
+        Member me = MemberFixture.create("me@test.com", "나");
+        memberRepository.save(me);
+        matchService.requestMatch(me);
+
+        matchService.tryMatching(me);
+
+        // When
+        MatchResponse status = matchService.getMatchStatus(me);
+
+        // Then
+        assertThat(status.matched()).isTrue();
+        assertThat(status.partnerNickname()).isEqualTo("상대방");
+        assertThat(status.chatRoomId()).isNotNull();
     }
 }

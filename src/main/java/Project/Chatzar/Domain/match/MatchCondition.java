@@ -16,12 +16,16 @@ public class MatchCondition {
     // 지역 (선택)
     private String region;
 
+    // 관심 주제 (선택)
+    private String topic;
+
     protected MatchCondition() {}
 
-    public MatchCondition(String genderPreference, Integer minAge, Integer maxAge, String region) {
+    public MatchCondition(String genderPreference, Integer minAge, Integer maxAge, String topic, String region) {
         this.genderPreference = genderPreference;
         this.minAge = minAge;
         this.maxAge = maxAge;
+        this.topic = topic;
         this.region = region;
     }
 }

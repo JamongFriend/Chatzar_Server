@@ -28,10 +28,12 @@
 - 설명: 유저가 마이페이지에서 매칭 조건을 설정하거나 수정
 - 입력:
     - `memberId`
-    - `MatchConditionDto`
-        - `genderPreference` (ANY / MALE / FEMALE …)
+    - `MatchConditionRequest`
+        - `genderPreference` (ANY / MALE / FEMALE)
         - `minAge`, `maxAge`
         - `topic`
+        - `region`
+
         - `region`
 - 동작:
     - `Member` 존재 여부 확인
