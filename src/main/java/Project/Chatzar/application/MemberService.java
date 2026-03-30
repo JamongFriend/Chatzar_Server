@@ -49,6 +49,15 @@ public class MemberService {
         return MemberResponse.fromEntity(member);
     }
 
+    @Transactional
+    public MemberResponse updateMember(Long memberId, Project.Chatzar.presentation.dto.member.ProfileUpdateRequest request) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+        
+        member.updateNickname(request.nickname());
+        return MemberResponse.fromEntity(member);
+    }
+
     private String generateUniqueTag(String nickname) {
         Random random = new Random();
         String tag;

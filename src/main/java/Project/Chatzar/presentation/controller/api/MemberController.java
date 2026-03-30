@@ -25,4 +25,12 @@ public class MemberController {
         MemberResponse response = memberService.getMember(memberId);
         return ResponseEntity.ok(response);
     }
+
+    @PutMapping("/{memberId}")
+    public ResponseEntity<MemberResponse> updateMember(
+            @PathVariable Long memberId,
+            @Valid @RequestBody Project.Chatzar.presentation.dto.member.ProfileUpdateRequest request
+    ) {
+        return ResponseEntity.ok(memberService.updateMember(memberId, request));
+    }
 }
