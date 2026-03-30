@@ -1,9 +1,9 @@
 package Project.Chatzar.presentation.controller.api;
 
-import Project.Chatzar.Domain.friendship.FriendshipRepository;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.member.MemberRepository;
 import Project.Chatzar.application.FriendshipService;
+import Project.Chatzar.presentation.dto.friendship.FriendListResponse;
 import Project.Chatzar.presentation.dto.friendship.FriendSearchRequest;
 import Project.Chatzar.presentation.dto.friendship.FriendshipResponse;
 import Project.Chatzar.presentation.dto.member.MemberResponse;
@@ -11,12 +11,11 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/friends")
 public class FriendshipController {
@@ -50,6 +49,12 @@ public class FriendshipController {
         friendshipService.acceptFriendRequest(friendshipId, me);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<FriendListResponse>> getFriendList(
+            @AuthenticationPrincipal Long memberId) {
+        return ResponseEntity.ok(friendshipService.getFriendList(memberId));
     }
 
     @GetMapping("/search")

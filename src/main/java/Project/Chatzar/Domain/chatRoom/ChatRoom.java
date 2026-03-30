@@ -59,10 +59,11 @@ public class ChatRoom {
         }
     }
 
-    // 친구 관계 성공 후 방 잠금 해제
+    // 친구 관계 성공 후 방 잠금 해제 및 타입 변경
     public void unlock() {
-        if(this.status == ChatRoomStatus.LOCKED && this.type == ChatRoomType.FRIEND) {
+        if (this.status == ChatRoomStatus.LOCKED && this.type == ChatRoomType.RANDOM) {
             this.status = ChatRoomStatus.ACTIVE;
+            this.type = ChatRoomType.FRIEND;
         }
     }
 

@@ -2,6 +2,7 @@ package Project.Chatzar.application;
 
 import Project.Chatzar.Domain.chatRoom.ChatRoom;
 import Project.Chatzar.Domain.chatRoom.ChatRoomRepository;
+import Project.Chatzar.Domain.chatRoom.ChatRoomStatus;
 import Project.Chatzar.Domain.member.Member;
 import Project.Chatzar.Domain.member.MemberRepository;
 import Project.Chatzar.Domain.message.Message;
@@ -34,6 +35,14 @@ public class MessageService {
 
         if (!room.isParticipant(senderId)) {
             throw new IllegalStateException("채팅방 참여자가 아닙니다.");
+        }
+
+        if (room.getStatus() == ChatRoomStatus.LOCKED) {
+            throw new IllegalStateException("잠긴 채팅방입니다. 메시지를 보내려면 친구가 되어야 합니다.");
+        }
+
+        if (room.getStatus() == ChatRoomStatus.CLOSED || room.getStatus() == ChatRoomStatus.DELETED) {
+            throw new IllegalStateException("종료되거나 삭제된 채팅방입니다.");
         }
 
         Message message = new Message(room, sender, content.trim());

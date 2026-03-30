@@ -66,7 +66,10 @@ public class FriendshipService {
                 .stream()
                 .map(f -> new FriendshipResponse(
                         f.getId(),
+                        f.getMemberA().getId(),
                         f.getMemberA().getNickname(),
+                        f.getMemberA().getTag(),
+                        f.getMemberA().getAge(),
                         f.getStatus().name()
                 ))
                 .toList();
