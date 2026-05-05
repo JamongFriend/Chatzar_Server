@@ -2,7 +2,6 @@ package Project.Chatzar.infrastructure.auth;
 
 import Project.Chatzar.Domain.auth.RefreshToken;
 import Project.Chatzar.Domain.auth.RefreshTokenRepository;
-import Project.Chatzar.Domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
