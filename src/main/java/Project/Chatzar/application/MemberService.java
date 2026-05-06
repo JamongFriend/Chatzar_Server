@@ -31,7 +31,8 @@ public class MemberService {
                 passwordEncoder.encode(request.password()),
                 request.nickname(),
                 uniqueTag,
-                request.age()
+                request.age(),
+                request.gender()
         );
 
         memberRepository.save(member);

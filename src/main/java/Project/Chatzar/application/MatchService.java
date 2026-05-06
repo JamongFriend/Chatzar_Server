@@ -102,29 +102,54 @@ public class MatchService {
         if (myRequest.getStatus() != MatchRequestStatus.WAITING) {
             return MatchResponse.waiting();
         }
-        var optionalPartner = matchRequestRepository
-                .findFirstByRequesterNotAndStatusOrderByCreatedAtAsc(
-                        myRequest.getRequester(), MatchRequestStatus.WAITING
-                );
-        if (optionalPartner.isEmpty()) {
+
+        Long myId = myRequest.getRequester().getId();
+
+        Optional<MatchRequest> partnerOptional = matchRequestRepository
+                .findByStatusOrderByCreatedAtAsc(MatchRequestStatus.WAITING)
+                .stream()
+                .filter(r -> !r.getRequester().getId().equals(myId))
+                .filter(r -> isCompatible(myRequest, r))
+                .findFirst();
+
+        if (partnerOptional.isEmpty()) {
             return MatchResponse.waiting();
         }
 
-        MatchRequest partnerRequest = optionalPartner.get();
-
+        MatchRequest partnerRequest = partnerOptional.get();
         Member memberA = myRequest.getRequester();
         Member memberB = partnerRequest.getRequester();
 
-        Match match = new Match(null, memberA, memberB);
-        match = matchRepository.save(match);
-
-        ChatRoom chatRoom = ChatRoom.create(memberA, memberB, match);
-        chatRoom = chatRoomRepository.save(chatRoom);
+        Match match = matchRepository.save(new Match(null, memberA, memberB));
+        ChatRoom chatRoom = chatRoomRepository.save(ChatRoom.create(memberA, memberB, match));
 
         myRequest.markMatched();
         partnerRequest.markMatched();
 
         return MatchResponse.matched(match.getId(), chatRoom.getId(), memberB);
+    }
+
+    private boolean isCompatible(MatchRequest mine, MatchRequest partner) {
+        return satisfiesCondition(mine.getCondition(), partner.getRequester())
+                && satisfiesCondition(partner.getCondition(), mine.getRequester());
+    }
+
+    private boolean satisfiesCondition(MatchCondition condition, Member target) {
+        if (condition == null) return true;
+
+        if (condition.getGenderPreference() != null && target.getGender() != null
+                && !condition.getGenderPreference().equalsIgnoreCase(target.getGender())) {
+            return false;
+        }
+        if (condition.getMinAge() != null && target.getAge() != null
+                && target.getAge() < condition.getMinAge()) {
+            return false;
+        }
+        if (condition.getMaxAge() != null && target.getAge() != null
+                && target.getAge() > condition.getMaxAge()) {
+            return false;
+        }
+        return true;
     }
 
 }

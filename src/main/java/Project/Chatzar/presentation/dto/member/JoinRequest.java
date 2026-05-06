@@ -9,5 +9,6 @@ public record JoinRequest(
         @Email @NotBlank String email,
         @NotBlank String password,
         @NotBlank String nickname,
-        @NotNull Long age
+        @NotNull Long age,
+        @NotBlank String gender
 ) {}

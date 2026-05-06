@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MatchRequestRepository {
-    // 현재 대기 중인 요청들을 가져오는 쿼리
     List<MatchRequest> findByStatus(MatchRequestStatus status);
+
+    List<MatchRequest> findByStatusOrderByCreatedAtAsc(MatchRequestStatus status);
 
     Optional<MatchRequest> findFirstByRequesterNotAndStatusOrderByCreatedAtAsc(
             Member requester, MatchRequestStatus status

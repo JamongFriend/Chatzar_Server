@@ -14,6 +14,7 @@ public record MemberResponse(
         String nickname,
         String tag,
         Long age,
+        String gender,
         MemberStatus status
 ) {
     public static MemberResponse fromEntity(Member member) {
@@ -24,6 +25,7 @@ public record MemberResponse(
                 member.getNickname(),
                 member.getTag(),
                 member.getAge(),
+                member.getGender(),
                 member.getStatus()
         );
     }

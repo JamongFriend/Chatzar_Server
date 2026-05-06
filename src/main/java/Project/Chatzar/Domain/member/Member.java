@@ -32,23 +32,27 @@ public class Member {
 
     private Long age;
 
+    @Column(length = 10)
+    private String gender;
+
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
 
     protected Member(){}
 
-    public Member(String name, String email, String password, String nickname, String tag, Long age, MemberStatus status) {
+    public Member(String name, String email, String password, String nickname, String tag, Long age, String gender, MemberStatus status) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.tag = tag;
         this.age = age;
+        this.gender = gender;
         this.status = status;
     }
 
-    public static Member createWithTag(String name, String email, String password, String nickname, String tag, Long age) {
-        return new Member(name, email, password, nickname, tag, age, MemberStatus.ACTIVE);
+    public static Member createWithTag(String name, String email, String password, String nickname, String tag, Long age, String gender) {
+        return new Member(name, email, password, nickname, tag, age, gender, MemberStatus.ACTIVE);
     }
 
     public void updateNickname(String newNickname) {

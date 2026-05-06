@@ -21,6 +21,11 @@ public class MatchRequestRepositoryImpl implements MatchRequestRepository {
     }
 
     @Override
+    public List<MatchRequest> findByStatusOrderByCreatedAtAsc(MatchRequestStatus status) {
+        return matchRequestJpaRepository.findByStatusOrderByCreatedAtAsc(status);
+    }
+
+    @Override
     public Optional<MatchRequest> findFirstByRequesterNotAndStatusOrderByCreatedAtAsc(Member requester, MatchRequestStatus status) {
         return matchRequestJpaRepository.findFirstByRequesterNotAndStatusOrderByCreatedAtAsc(requester, status);
     }
